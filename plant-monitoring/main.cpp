@@ -4,23 +4,23 @@
  */
 
 #include "mbed.h"
+#include "./MMA8451Q.h"
+Ticker ticker;
+bool tick_event;
+void ticker_isr(void){tick_event =true;}
 
-
-// Blinking rate in milliseconds
-#define BLINKING_RATE     500ms
-
-
-int main()
-{
-    // Initialise the digital pin LED1 as an output
-#ifdef LED1
-    DigitalOut led(LED1);
-#else
-    bool led;
-#endif
-
-    while (true) {
-        led = !led;
-        ThisThread::sleep_for(BLINKING_RATE);
-    }
-}
+int main(void){
+	MMA8451Q acc(PB_9,PB_8,0x1d<<1);
+	float x,y,z;
+	ticker.attach(ticker_isr,2000ms);
+	printf("WHO AM I: 0x%2X\r\n", acc.getWhoAmI());
+	while(true){
+		if(tick_event){
+			x=acc.getAccX();
+			y=acc.getAccY();
+			z=acc.getAccZ();
+			printf("x =%f \t y=%f\t z=%f\n",x,y,z);
+			tick_event = false;
+		}
+	}		
+}	
