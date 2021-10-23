@@ -11216,21 +11216,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>accelerometer</GroupName>
-          <Files>
-            <File>
-              <FileName>MMA8451Q.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\Downloads\Student Presentations\Accelerometer\MMA8451Q.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>MMA8451Q.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\..\Downloads\Student Presentations\Accelerometer\MMA8451Q.h</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>rgb</GroupName>
           <Files>
             <File>
@@ -11242,6 +11227,21 @@
               <FileName>TCS3472_I2C.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\rgb\TCS3472_I2C.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>accelerometer</GroupName>
+          <Files>
+            <File>
+              <FileName>MMA8451Q.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\accelerometer\MMA8451Q.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>MMA8451Q.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\accelerometer\MMA8451Q.h</FilePath>
             </File>
           </Files>
         </Group>
