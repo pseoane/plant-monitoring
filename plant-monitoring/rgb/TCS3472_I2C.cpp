@@ -41,10 +41,11 @@ int TCS3472_I2C::readMultipleRegisters( char address, char* output, int quantity
     return ack;
 }
 
-int TCS3472_I2C::getPredominantColor(int* readings) {
-	int tempMax = 0;
-	int tempMaxIndex = 1;
-	for (int i = 1; i <= 3; i++) {
+
+uint8_t TCS3472_I2C::getPredominantColor(uint16_t* readings) {
+	uint8_t tempMax = 0;
+	uint8_t tempMaxIndex = 1;
+	for (uint8_t i = 1; i <= 3; i++) {
 		if (readings[i] > tempMax) {
 			tempMax = readings[i];
 			tempMaxIndex = i;
@@ -53,7 +54,7 @@ int TCS3472_I2C::getPredominantColor(int* readings) {
 	return tempMaxIndex - 1; // Clear is not included
 }
  
-int TCS3472_I2C::getAllColors( int* readings ){
+uint8_t TCS3472_I2C::getAllColors(uint16_t* readings ){
     char buffer[8] = { 0 };
  
     readMultipleRegisters( CDATA, buffer, 8 );
@@ -63,35 +64,7 @@ int TCS3472_I2C::getAllColors( int* readings ){
     readings[2] = (int)buffer[5] << 8 | (int)buffer[4];
     readings[3] = (int)buffer[7] << 8 | (int)buffer[6];
 		
-		return getPredominantColor(readings);
-}
- 
-int TCS3472_I2C::getClearData(){
-    char buffer[2] = { 0 };
-    readMultipleRegisters( CDATA, buffer, 2 );
-    int reading = (int)buffer[1] << 8 | (int)buffer[0];
-    return reading;
-}
- 
-int TCS3472_I2C::getRedData(){
-    char buffer[2] = { 0 };
-    readMultipleRegisters( RDATA, buffer, 2 );
-    int reading = (int)buffer[1] << 8 | (int)buffer[0];
-    return reading;
-}
- 
-int TCS3472_I2C::getGreenData(){
-    char buffer[2] = { 0 };
-    readMultipleRegisters( GDATA, buffer, 2 );
-    int reading = (int)buffer[1] << 8 | (int)buffer[0];
-    return reading;
-}
- 
-int TCS3472_I2C::getBlueData(){
-    char buffer[2] = { 0 };
-    readMultipleRegisters( BDATA, buffer, 2 );
-    int reading = (int)buffer[1] << 8 | (int)buffer[0];
-    return reading;
+	return getPredominantColor(readings);
 }
  
 int TCS3472_I2C::enablePower(){

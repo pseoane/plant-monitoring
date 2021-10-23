@@ -42,35 +42,7 @@ public:
 		 * @returns
 		 *   Predominant color (0 = RED, 1 = GREEN, 2 = BLUE)
      */
-    int getAllColors( int* readings );
-    
-    /** Read clear data
-     *
-     * @returns
-     *     Clear data reading
-     */
-    int getClearData();
-    
-    /** Read red data
-     *
-     * @returns
-     *     Red data reading
-     */
-    int getRedData();
-    
-    /** Read green data
-     *
-     * @returns
-     *     Green data reading
-     */
-    int getGreenData();
-    
-    /** Read blue data
-     *
-     * @returns
-     *     Blue data reading
-     */
-    int getBlueData();
+    uint8_t getAllColors(uint16_t* readings );
     
     /** Power ON. Activates the internal oscillator to permit the timers and ADC channels to operate.
      *
@@ -324,7 +296,7 @@ private:
     int writeMultipleRegisters( char address, char* data, int quantity );
     char readSingleRegister( char address );
     int readMultipleRegisters( char address, char* output, int quantity );
-    int getPredominantColor(int* readings);
+    uint8_t getPredominantColor(uint16_t* readings);
     float roundTowardsZero( const float value );
 };
  
