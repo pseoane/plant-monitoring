@@ -17,14 +17,15 @@ int main(void){
 	rgbSensor.enablePowerAndRGBC();
 	float accValues[3];
 	int rgbValues[4];
+	char const* colors[3] = {"RED", "GREEN", "BLUE"};
 	ticker.attach(ticker_isr,2000ms);
-	printf("WHO AM I: 0x%2X\r\n", acc.getWhoAmI());
 	while(true){
 		if(tick_event){
 			acc.getAllAxis(accValues);
-			rgbSensor.getAllColors(rgbValues);
-			printf("ACCELEROMETER: X_AXIS=%f \t Y_AXIS=%f\t Z_AXIS=%f\n",accValues[0], accValues[1], accValues[2]);
-			printf("COLOR SENSOR: CLEAR=%d, RED=%d, GREEN=%d, BLUE=%d\n", rgbValues[0], rgbValues[1], rgbValues[2], rgbValues[3]);
+			char const* dominantColor = colors[rgbSensor.getAllColors(rgbValues)];
+			printf("ACCELEROMETER: X_AXIS=%f \t Y_AXIS=%f\t Z_AXIS=%f\n", accValues[0], accValues[1], accValues[2]);
+			printf("COLOR SENSOR: CLEAR=%d, RED=%d, GREEN=%d, BLUE=%d -- DOMINANT COLOR=%s\n", rgbValues[0], rgbValues[1], rgbValues[2], rgbValues[3], dominantColor);
+			printf("\n\n");
 			tick_event = false;
 		}
 	}		

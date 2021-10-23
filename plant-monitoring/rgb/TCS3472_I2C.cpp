@@ -40,8 +40,20 @@ int TCS3472_I2C::readMultipleRegisters( char address, char* output, int quantity
     int ack = i2c.read( SLAVE_ADDRESS << 1, output, quantity );
     return ack;
 }
+
+int TCS3472_I2C::getPredominantColor(int* readings) {
+	int tempMax = 0;
+	int tempMaxIndex = 1;
+	for (int i = 1; i <= 3; i++) {
+		if (readings[i] > tempMax) {
+			tempMax = readings[i];
+			tempMaxIndex = i;
+		}
+	}
+	return tempMaxIndex - 1; // Clear is not included
+}
  
-void TCS3472_I2C::getAllColors( int* readings ){
+int TCS3472_I2C::getAllColors( int* readings ){
     char buffer[8] = { 0 };
  
     readMultipleRegisters( CDATA, buffer, 8 );
@@ -50,6 +62,8 @@ void TCS3472_I2C::getAllColors( int* readings ){
     readings[1] = (int)buffer[3] << 8 | (int)buffer[2];
     readings[2] = (int)buffer[5] << 8 | (int)buffer[4];
     readings[3] = (int)buffer[7] << 8 | (int)buffer[6];
+		
+		return getPredominantColor(readings);
 }
  
 int TCS3472_I2C::getClearData(){

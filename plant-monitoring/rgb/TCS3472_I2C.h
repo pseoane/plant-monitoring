@@ -39,8 +39,10 @@ public:
     /** Read red, green, blue and clear values into array
      *
      * @param readings Array of four integers to store the read data
+		 * @returns
+		 *   Predominant color (0 = RED, 1 = GREEN, 2 = BLUE)
      */
-    void getAllColors( int* readings );
+    int getAllColors( int* readings );
     
     /** Read clear data
      *
@@ -322,7 +324,7 @@ private:
     int writeMultipleRegisters( char address, char* data, int quantity );
     char readSingleRegister( char address );
     int readMultipleRegisters( char address, char* output, int quantity );
-    
+    int getPredominantColor(int* readings);
     float roundTowardsZero( const float value );
 };
  
