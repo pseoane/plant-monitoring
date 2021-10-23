@@ -22,26 +22,6 @@
  
 /** TCS3472_I2C class.
  *  Used to read to and write from TCS3472 color sensor.
- *
- * Example:
- * @code
- * #include "mbed.h"
- * #include "TCS3472_I2C.h"
- *
- * TCS3472_I2C rgb_sensor( p9, p10 );
- * 
- * int main() {
- *     rgb_sensor.enablePowerAndRGBC();
- *     rgb_sensor.setIntegrationTime( 100 );
- *
- *     int rgb_readings[4];
- *     while(1) {
- *         rgb_sensor.getAllColors( rgb_readings );
- *         printf( "red: %d, green: %d, blue: %d, clear: %d", rgb_readings[0], rgb_readings[1], rgb_readings[2], rgb_readings[3] );
- *         wait_ms( 100 );
- *     }
- * }
- * @endcode
  */
 class TCS3472_I2C {
 public:

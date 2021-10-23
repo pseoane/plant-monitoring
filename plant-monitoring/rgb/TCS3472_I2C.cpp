@@ -2,7 +2,6 @@
  
 TCS3472_I2C::TCS3472_I2C( PinName sda, PinName scl ) : i2c( sda, scl ){   
     i2c.frequency(100000);
-    enablePowerAndRGBC();
 }
  
 TCS3472_I2C::~TCS3472_I2C(){
