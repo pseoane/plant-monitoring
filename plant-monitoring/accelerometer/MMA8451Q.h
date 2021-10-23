@@ -60,7 +60,7 @@ public:
   * MMA8451Q destructor
   */
   ~MMA8451Q();
- 
+
   /**
    * Get the value of the WHO_AM_I register
    *
@@ -68,34 +68,11 @@ public:
    */
   uint8_t getWhoAmI();
  
-  /**
-   * Get X axis acceleration
-   *
-   * @returns X axis acceleration
-   */
-  float getAccX();
- 
-  /**
-   * Get Y axis acceleration
-   *
-   * @returns Y axis acceleration
-   */
-  float getAccY();
-	
 	/**
-   * Get XYZ axis acceleration
-   *
-   * @param res array where acceleration data will be stored
-   */
-  void getAccAllAxis(float * res);
- 
-  /**
-   * Get Z axis acceleration
-   *
-   * @returns Z axis acceleration
-   */
-  float getAccZ();
- 
+	* Get all accelerometer axis values in a single I2C read
+	* @param returnValue array of 3 elements corresponding to axis X, Y and Z
+	*/
+	void getAllAxis(float * returnValue);
   
  
 private:
@@ -103,8 +80,7 @@ private:
   int m_addr;
   void readRegs(int addr, uint8_t * data, int len);
   void writeRegs(uint8_t * data, int len);
-  int16_t getAccAxis(uint8_t addr);
- 
+	int16_t concatValues(int16_t reg0, int16_t reg1);
 };
  
 #endif

@@ -21,35 +21,21 @@ uint8_t MMA8451Q::getWhoAmI() {
     readRegs(REG_WHO_AM_I, &who_am_i, 1);
     return who_am_i;
 }
- 
-float MMA8451Q::getAccX() {
-    return (float(getAccAxis(REG_OUT_X_MSB))/4096.0);
+
+int16_t MMA8451Q::concatValues(int16_t reg0, int16_t reg1) {
+	int16_t value = (reg0 << 6) | (reg1 >> 2);
+	if (value > UINT14_MAX/2)
+		value -= UINT14_MAX;
+	return value;
 }
- 
-float MMA8451Q::getAccY() {
-    return (float(getAccAxis(REG_OUT_Y_MSB))/4096.0);
-}
- 
-float MMA8451Q::getAccZ() {
-    return (float(getAccAxis(REG_OUT_Z_MSB))/4096.0);
-}
- 
-void MMA8451Q::getAccAllAxis(float * res) {
-    res[0] = getAccX();
-    res[1] = getAccY();
-    res[2] = getAccZ();
-}
- 
-int16_t MMA8451Q::getAccAxis(uint8_t addr) {
-    int16_t acc;
-    uint8_t res[2];
-    readRegs(addr, res, 2);
- 
-    acc = (res[0] << 6) | (res[1] >> 2);
-    if (acc > UINT14_MAX/2)
-        acc -= UINT14_MAX;
- 
-    return acc;
+
+void MMA8451Q::getAllAxis(float * returnValue) {
+	uint8_t res[6];
+	
+	readRegs(REG_OUT_X_MSB, res, 6);
+	returnValue[0] = float(concatValues(res[0], res[1])) / 4096.0;
+	returnValue[1] = float(concatValues(res[2], res[3])) / 4096.0;
+	returnValue[2] = float(concatValues(res[4], res[5])) / 4069.0;
 }
  
 void MMA8451Q::readRegs(int addr, uint8_t * data, int len) {

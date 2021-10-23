@@ -11,15 +11,13 @@ void ticker_isr(void){tick_event =true;}
 
 int main(void){
 	MMA8451Q acc(PB_9,PB_8,0x1d<<1);
-	float x,y,z;
+	float accValues[3];
 	ticker.attach(ticker_isr,2000ms);
 	printf("WHO AM I: 0x%2X\r\n", acc.getWhoAmI());
 	while(true){
 		if(tick_event){
-			x=acc.getAccX();
-			y=acc.getAccY();
-			z=acc.getAccZ();
-			printf("x =%f \t y=%f\t z=%f\n",x,y,z);
+			acc.getAllAxis(accValues);
+			printf("ACCELEROMETER: X_AXIS=%f \t Y_AXIS=%f\t Z_AXIS=%f\n",accValues[0], accValues[1], accValues[2]);
 			tick_event = false;
 		}
 	}		
