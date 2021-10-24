@@ -53,7 +53,7 @@ uint8_t TCS3472_I2C::getPredominantColor(uint16_t* readings) {
 		}
 	}
 	printf("%d",tempMaxIndex);
-	return tempMaxIndex - 1;
+	return tempMaxIndex - 1; // Clear is not included
 }
  
 uint8_t TCS3472_I2C::getAllColors(uint16_t* readings ){
