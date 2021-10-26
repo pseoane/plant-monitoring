@@ -3,10 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include "mbed.h"
-#include "./MMA8451Q.h"
-#include "./TCS3472_I2C.h"
-#include "./HW5P1_2015.h"
+
 
 Ticker ticker;
 bool tick_event;
