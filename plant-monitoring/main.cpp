@@ -5,8 +5,7 @@
 
 
 
-Ticker ticker;
-bool tick_event;
+;
 void ticker_isr(void){tick_event = true;}
 
 int main(void){
