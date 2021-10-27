@@ -37,13 +37,13 @@ public:
      * Get last measured temperature data
      * return: int32_t = temperature in millidegrees centigrade
      */
-    int32_t get_temperature();
+    float get_temperature();
  
     /*
      * Get last measured relative humidity data
      * return: uint32_t = relative humidity value in milli-percent
      */
-    uint32_t get_humidity();
+    float get_humidity();
     
     /*
      * Perform measurement.

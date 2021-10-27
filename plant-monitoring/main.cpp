@@ -31,8 +31,8 @@ int main(void){
 			printf("ACCELEROMETER: X_AXIS=%f \t Y_AXIS=%f\t Z_AXIS=%f\n", accValues[0], accValues[1], accValues[2]);
 			printf("COLOR SENSOR: CLEAR=%d, RED=%d, GREEN=%d, BLUE=%d -- DOMINANT COLOR=%s\n", rgbValues[0], rgbValues[1], rgbValues[2], rgbValues[3], dominantColor);
 			printf("LIGHT: %3.1f%%\n", lightSensor.readLight());
-			printf("TEMPERATURE: %d \n ", humtempsensor.get_temperature());
-			printf("HUMIDITY: %d \n ", humtempsensor.get_humidity());
+			printf("TEMPERATURE: %2.2f C \n ", humtempsensor.get_temperature());
+			printf("HUMIDITY: %2.2f%%  \n ", humtempsensor.get_humidity());
 			
 			printf("\n\n");
 			tick_event = false;

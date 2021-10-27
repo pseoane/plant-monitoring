@@ -10,14 +10,14 @@ Si7021::~Si7021()
     
 }
  
-int32_t Si7021::get_temperature()
+float Si7021::get_temperature()
 {
-    return tData;
+     return float(tData / 1000 + (tData % 1000)*0.001);
 }
  
-uint32_t Si7021::get_humidity()
+float Si7021::get_humidity()
 {
-    return rhData;
+    return float(rhData / 1000 + (rhData % 1000)*0.001);
 }
  
 bool Si7021::measure()
