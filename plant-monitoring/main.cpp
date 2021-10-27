@@ -33,7 +33,6 @@ int main(void){
 			printf("LIGHT: %3.1f%%\n", lightSensor.readLight());
 			printf("TEMPERATURE: %d \n ", humtempsensor.get_temperature());
 			printf("HUMIDITY: %d \n ", humtempsensor.get_humidity());
-			printf("CHECK: %d \n ", humtempsensor.check());
 			
 			printf("\n\n");
 			tick_event = false;
