@@ -16,7 +16,7 @@
         <TargetCommonOption>
           <Device>STM32L072CZTx</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32L0xx_DFP.2.1.0</PackID>
+          <PackID>Keil.STM32L0xx_DFP.2.0.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>CPUTYPE("Cortex-M0+") </Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -11287,6 +11287,21 @@
               <FileName>Si7021.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\Si7021.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>gps</GroupName>
+          <Files>
+            <File>
+              <FileName>MT3339GPS.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\MT3339GPS.h</FilePath>
+            </File>
+            <File>
+              <FileName>MT3339GPS.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\MT3339GPS.cpp</FilePath>
             </File>
           </Files>
         </Group>
