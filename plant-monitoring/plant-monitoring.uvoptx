@@ -26294,6 +26294,7 @@
   </Group>
 
   <Group>
+    <GroupName>rgb-led</GroupName>
     <GroupName>humdity</GroupName>
     <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
@@ -26302,6 +26303,12 @@
     <File>
       <GroupNumber>6</GroupNumber>
       <FileNumber>2172</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\led-rgb\RGBLED.cpp</PathWithFileName>
+      <FilenameWithoutPath>RGBLED.cpp</FilenameWithoutPath>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -26314,6 +26321,12 @@
     <File>
       <GroupNumber>6</GroupNumber>
       <FileNumber>2173</FileNumber>
+      <FileType>5</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\led-rgb\RGBLED.h</PathWithFileName>
+      <FilenameWithoutPath>RGBLED.h</FilenameWithoutPath>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
