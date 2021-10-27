@@ -26295,8 +26295,7 @@
 
   <Group>
     <GroupName>rgb-led</GroupName>
-    <GroupName>humdity</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -26309,12 +26308,6 @@
       <bDave2>0</bDave2>
       <PathWithFileName>.\led-rgb\RGBLED.cpp</PathWithFileName>
       <FilenameWithoutPath>RGBLED.cpp</FilenameWithoutPath>
-      <FileType>5</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>.\Si7021.h</PathWithFileName>
-      <FilenameWithoutPath>Si7021.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -26327,6 +26320,32 @@
       <bDave2>0</bDave2>
       <PathWithFileName>.\led-rgb\RGBLED.h</PathWithFileName>
       <FilenameWithoutPath>RGBLED.h</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+  </Group>
+
+  <Group>
+    <GroupName>humdity</GroupName>
+    <tvExp>1</tvExp>
+    <tvExpOptDlg>0</tvExpOptDlg>
+    <cbSel>0</cbSel>
+    <RteFlg>0</RteFlg>
+    <File>
+      <GroupNumber>7</GroupNumber>
+      <FileNumber>2174</FileNumber>
+      <FileType>5</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\Si7021.h</PathWithFileName>
+      <FilenameWithoutPath>Si7021.h</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>7</GroupNumber>
+      <FileNumber>2175</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
