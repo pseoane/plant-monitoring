@@ -42,21 +42,19 @@ int TCS3472_I2C::readMultipleRegisters( char address, char* output, int quantity
 }
 
 
-uint8_t TCS3472_I2C::getPredominantColor(uint16_t* readings) {
+int TCS3472_I2C::getPredominantColor(uint16_t* readings) {
 	uint16_t tempMax = 0;
 	uint8_t tempMaxIndex = 1;
-	printf("%d %d %d\n", readings[1], readings[2], readings[3]);
 	for (uint8_t i = 1; i <= 3; i++) {
 		if (readings[i] > tempMax) {
 			tempMax = readings[i];
 			tempMaxIndex = i;
 		}
 	}
-	printf("%d",tempMaxIndex);
 	return tempMaxIndex - 1; // Clear is not included
 }
  
-uint8_t TCS3472_I2C::getAllColors(uint16_t* readings ){
+int TCS3472_I2C::getAllColors(uint16_t* readings ){
     char buffer[8] = { 0 };
  
     readMultipleRegisters( CDATA, buffer, 8 );

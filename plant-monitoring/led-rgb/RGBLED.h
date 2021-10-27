@@ -1,18 +1,21 @@
 #ifndef RGBLED_H
 #define RGBLED_H
 #include "mbed.h"
+
+enum Color { RED = 0, GREEN = 1, BLUE = 2};	
+
 class RGBLED {
 	public:
-		PwmOut redPin;
-		PwmOut greenPin;
-	  PwmOut bluePin;
+		DigitalOut redPin;
+		DigitalOut greenPin;
+	  DigitalOut bluePin;
 		/**
 		* Constructor
 		* @param redPin PWM pin for red
 		* @param grenPin PWM pin for green
 		* @param bluePin PWM pin for blue
 		*/
-		RGBLED(PwmOut redPin, PwmOut greenPin, PwmOut bluePin); 
+		RGBLED(DigitalOut redPin, DigitalOut greenPin, DigitalOut bluePin); 
 		
 		/** 
 		* Destructor
@@ -25,7 +28,9 @@ class RGBLED {
 	* @param blue component for blue (0.0 - 1.0)
 	* @param green component for green (0.0 - 1.0)
 	*/
-		void setColor(float red, float green, float blue);
+		void setColor(uint8_t red, uint8_t green, uint8_t blue);
+		
+		void setColor(int color);
 };
 
 #endif
