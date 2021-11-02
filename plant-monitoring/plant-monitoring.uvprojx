@@ -11294,14 +11294,14 @@
           <GroupName>gps</GroupName>
           <Files>
             <File>
-              <FileName>MT3339GPS.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\MT3339GPS.h</FilePath>
+              <FileName>MBed_Adafruit_GPS.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\MBed_Adafruit_GPS.cpp</FilePath>
             </File>
             <File>
-              <FileName>MT3339GPS.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\MT3339GPS.cpp</FilePath>
+              <FileName>MBed_Adafruit_GPS.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\MBed_Adafruit_GPS.h</FilePath>
             </File>
           </Files>
         </Group>
