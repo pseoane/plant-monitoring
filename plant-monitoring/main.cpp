@@ -9,6 +9,7 @@
 #include "./HW5P1_2015.h"
 #include "./RGBLED.h"
 #include "./Si7021.h"
+#include "./SEN_13322.h"
 
 Ticker ticker;
 MMA8451Q acc(PB_9,PB_8,0x1d<<1);
@@ -16,6 +17,8 @@ TCS3472_I2C rgbSensor(PB_9, PB_8);
 HW5P1_2015 lightSensor(A0);
 RGBLED rgbLed(PH_0, PH_1, PB_13);
 Si7021 humtempsensor(PB_9,PB_8);
+SEN_13322 soilMoistureSensor(PA_0);
+
 bool tick_event;
 void ticker_isr(void){tick_event = true;}
 char const* colorNames[3] = {"RED", "GREEN", "BLUE"};
@@ -37,6 +40,7 @@ int main(void){
 			printf("LIGHT: %3.1f%%", lightSensor.readLight());
 			printf("TEMPERATURE: %2.2f C \n ", humtempsensor.get_temperature());
 			printf("HUMIDITY: %2.2f%%  \n ", humtempsensor.get_humidity());
+			printf("SOIL MOISTURE: %2.2f%% \n ", soilMoistureSensor.getMoistureValue());
 			printf("\n\n");
 			tick_event = false;
 		}
