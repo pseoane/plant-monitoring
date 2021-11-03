@@ -135,7 +135,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>ST-LINKIII-KEIL_SWO</Key>
-          <Name>-U-O206 -O206 -SF10000 -C0 -A0 -I0 -HNlocalhost -HP7184 -P1 -N00("ARM CoreSight SW-DP (ARM Core") -D00(0BC11477) -L00(0) -TO131090 -TC10000000 -TT10000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO7 -FD20000000 -FC1000 -FN1 -FF0STM32L0xx_192.FLM -FS08000000 -FL030000 -FP0($$Device:STM32L072CZTx$CMSIS\Flash\STM32L0xx_192.FLM)</Name>
+          <Name>-U-O206 -O206 -SF10000 -C0 -A0 -I0 -HNlocalhost -HP7184 -P1 -N00("") -D00(00000000) -L00(0) -TO131090 -TC10000000 -TT10000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO7 -FD20000000 -FC1000 -FN1 -FF0STM32L0xx_192.FLM -FS08000000 -FL030000 -FP0($$Device:STM32L072CZTx$CMSIS\Flash\STM32L0xx_192.FLM)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -26295,7 +26295,7 @@
 
   <Group>
     <GroupName>rgb-led</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -26359,7 +26359,6 @@
 
   <Group>
     <GroupName>gps</GroupName>
-    <GroupName>soil-moisture</GroupName>
     <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
@@ -26373,8 +26372,6 @@
       <bDave2>0</bDave2>
       <PathWithFileName>.\MBed_Adafruit_GPS.cpp</PathWithFileName>
       <FilenameWithoutPath>MBed_Adafruit_GPS.cpp</FilenameWithoutPath>
-      <PathWithFileName>.\soil-moisture\SEN_13322.cpp</PathWithFileName>
-      <FilenameWithoutPath>SEN_13322.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -26387,6 +26384,36 @@
       <bDave2>0</bDave2>
       <PathWithFileName>.\MBed_Adafruit_GPS.h</PathWithFileName>
       <FilenameWithoutPath>MBed_Adafruit_GPS.h</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+  </Group>
+
+  <Group>
+    <GroupName>soil-moisture</GroupName>
+    <tvExp>1</tvExp>
+    <tvExpOptDlg>0</tvExpOptDlg>
+    <cbSel>0</cbSel>
+    <RteFlg>0</RteFlg>
+    <File>
+      <GroupNumber>9</GroupNumber>
+      <FileNumber>2178</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\soil-moisture\SEN_13322.cpp</PathWithFileName>
+      <FilenameWithoutPath>SEN_13322.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>9</GroupNumber>
+      <FileNumber>2179</FileNumber>
+      <FileType>5</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
       <PathWithFileName>.\soil-moisture\SEN_13322.h</PathWithFileName>
       <FilenameWithoutPath>SEN_13322.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
