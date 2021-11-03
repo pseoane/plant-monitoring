@@ -14,7 +14,7 @@
 
 enum Mode { TEST, NORMAL };
 
-Mode currentMode = TEST;
+Mode currentMode;
 MMA8451Q acc(PB_9,PB_8,0x1d<<1);
 TCS3472_I2C rgbSensor(PB_9, PB_8);
 HW5P1_2015 lightSensor(A0);
@@ -78,6 +78,8 @@ int main(void){
   refresh_Timer.start();  //starts the clock on the timer
 	
 	userButton.fall(buttonPressedIsr);
+	currentMode = TEST;
+	workerThread.start(testMode);
 	
 	while(true){
 
@@ -85,10 +87,12 @@ int main(void){
 			workerThread.terminate();
 			switch (currentMode) {
 				case(TEST):
+					printf("Current mode set to NORMAL\n");
 					currentMode = NORMAL;
 				  workerThread.start(testMode);
 					break;
 				case(NORMAL):
+					printf("Current mode set to TEST\n");
 					currentMode = TEST;
 					workerThread.start(normalMode);
 					break;
