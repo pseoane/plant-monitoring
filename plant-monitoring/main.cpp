@@ -66,13 +66,13 @@ int main(void){
 				printf("Time: %d:%d:%d.%u\r\n", myGPS.hour, myGPS.minute, myGPS.seconds, myGPS.milliseconds);
 				printf("Date: %d/%d/20%d\r\n", myGPS.day, myGPS.month, myGPS.year);
 				printf("Quality: %d\r\n", (int) myGPS.fixquality);
-				//if ((int)myGPS.fixquality > 0) {
-				printf("Location: %5.2f %c, %5.2f %c\r\n", myGPS.latitude, myGPS.lat, myGPS.longitude, myGPS.lon);
-				printf("Speed: %5.2f knots\r\n", myGPS.speed);
-				printf("Angle: %5.2f\r\n", myGPS.angle);
-				printf("Altitude: %5.2f\r\n", myGPS.altitude);
-				printf("Satellites: %d\r\n", myGPS.satellites);
-				//}
+				if ((int)myGPS.fixquality > 0) {
+					printf("Location: %5.2f %c, %5.2f %c\r\n", myGPS.latitude, myGPS.lat, myGPS.longitude, myGPS.lon);
+					printf("Speed: %5.2f knots\r\n", myGPS.speed);
+					printf("Angle: %5.2f\r\n", myGPS.angle);
+					printf("Altitude: %5.2f\r\n", myGPS.altitude);
+					printf("Satellites: %d\r\n", myGPS.satellites);
+				}
 		}
 		
 		
