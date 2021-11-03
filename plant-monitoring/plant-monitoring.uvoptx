@@ -26359,6 +26359,7 @@
 
   <Group>
     <GroupName>gps</GroupName>
+    <GroupName>soil-moisture</GroupName>
     <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
@@ -26372,6 +26373,8 @@
       <bDave2>0</bDave2>
       <PathWithFileName>.\MBed_Adafruit_GPS.cpp</PathWithFileName>
       <FilenameWithoutPath>MBed_Adafruit_GPS.cpp</FilenameWithoutPath>
+      <PathWithFileName>.\soil-moisture\SEN_13322.cpp</PathWithFileName>
+      <FilenameWithoutPath>SEN_13322.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -26384,6 +26387,8 @@
       <bDave2>0</bDave2>
       <PathWithFileName>.\MBed_Adafruit_GPS.h</PathWithFileName>
       <FilenameWithoutPath>MBed_Adafruit_GPS.h</FilenameWithoutPath>
+      <PathWithFileName>.\soil-moisture\SEN_13322.h</PathWithFileName>
+      <FilenameWithoutPath>SEN_13322.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
