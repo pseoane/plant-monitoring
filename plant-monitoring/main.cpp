@@ -14,7 +14,7 @@
 
 enum Mode { TEST, NORMAL };
 
-Mode currentMode;
+Mode currentMode = TEST;
 MMA8451Q acc(PB_9,PB_8,0x1d<<1);
 TCS3472_I2C rgbSensor(PB_9, PB_8);
 HW5P1_2015 lightSensor(A0);
@@ -97,6 +97,7 @@ int main(void){
 					workerThread.start(normalMode);
 					break;
 			}
+			buttonPressed = false;
 		}
 	}		
 }	
