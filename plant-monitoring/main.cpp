@@ -31,8 +31,6 @@ UnbufferedSerial * gps_Serial;
 bool buttonPressed = false;
 float accValues[3];
 uint16_t rgbValues[4];
-Thread workerThread;
-
 InterruptIn userButton(PB_2);
 
 void buttonPressedIsr() {
@@ -40,13 +38,17 @@ void buttonPressedIsr() {
 }
 
 void normalMode() {
+	printf("Norrrmal\n");
+	while (!buttonPressed){
+		wait_us(500);
+	};
 }
 
 void testMode() {
-	ticker.detach();
+	printf("Tesssting\n");
 	ticker.attach(ticker_isr, 2000ms);
 	
-	while(true) {
+	while(!buttonPressed) {
 		if(tick_event){
 			acc.getAllAxis(accValues);
 			humtempsensor.measure();
@@ -63,6 +65,7 @@ void testMode() {
 			tick_event = false;
 		}
 	}
+	printf("Exiting thread\n");
 }
 
 int main(void){
@@ -79,30 +82,32 @@ int main(void){
 	
 	userButton.fall(buttonPressedIsr);
 	currentMode = TEST;
-	workerThread.start(testMode);
-	
+	testMode();
 	while(true){
 
 		if (buttonPressed) {
-			workerThread.terminate();
 			switch (currentMode) {
 				case(TEST):
-					printf("Current mode set to NORMAL\n");
 					currentMode = NORMAL;
-				  workerThread.start(testMode);
+					printf("Current mode set to NORMAL\n");
+					buttonPressed = false;
+					normalMode();
 					break;
 				case(NORMAL):
-					printf("Current mode set to TEST\n");
 					currentMode = TEST;
-					workerThread.start(normalMode);
+					printf("Current mode set to TEST\n");
+					buttonPressed = false;
+					testMode();
 					break;
 			}
-			buttonPressed = false;
+			
 		}
+		
 	}		
 }	
 
 //void readAndPrintGps() {
+//	
 //	while(true) {
 //				c = myGPS.read();   //queries the GPS
 ////        if (c) { printf("%c", c); } //this line will echo the GPS data if not paused
