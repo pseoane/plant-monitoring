@@ -42,6 +42,7 @@ float speed, angle;
 char lat, lon, mag;
 bool fix;
 uint8_t fixquality, satellites;
+Mutex mutex;
 
 void buttonPressedIsr() {
 	buttonPressed = true;
@@ -69,6 +70,7 @@ void readGps(void) {
 			//if (duration_cast<milliseconds>(refresh_Timer.elapsed_time()).count() >= refresh_Time) {
 			//if (refresh_Timer.read_ms() >= refresh_Time) {
 					//refresh_Timer.reset();
+			    mutex.lock();
 					hour = myGPS.hour;
 					minute = myGPS.minute;
 					seconds_gps = myGPS.seconds;
@@ -85,7 +87,9 @@ void readGps(void) {
 					angle = myGPS.angle;
 					altitude = myGPS.altitude;
 					satellites = myGPS.satellites;
+					mutex.unlock();
 					gpsInfoAvailable = true;
+					
 					
 					//}
 			//}
@@ -98,6 +102,7 @@ void normalMode() {
 	while (!buttonPressed){
 		if(tick_event){
 			if (gpsInfoAvailable){
+				mutex.lock();
 				printf("Time: %d:%d:%d.%u\r\n", hour, minute, seconds_gps, milliseconds_gps);
 				printf("Date: %d/%d/20%d\r\n",day, month, year);
 				printf("Quality: %d\r\n", (int) fixquality);
@@ -107,6 +112,7 @@ void normalMode() {
 				printf("Angle: %5.2f\r\n", angle);
 				printf("Altitude: %5.2f\r\n", altitude);
 				printf("Satellites: %d\r\n", satellites);
+				mutex.unlock();
 				gpsInfoAvailable = false;
 			}
 			tick_event = false;
