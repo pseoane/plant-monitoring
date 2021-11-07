@@ -87,12 +87,7 @@ void readGps(void) {
 					continue;
 				}
 			}
-
-			//check if enough time has passed to warrant printing GPS info to screen
-			//note if refresh_Time is too low or pc.baud is too low, GPS data may be lost during printing
-			//if (duration_cast<milliseconds>(refresh_Timer.elapsed_time()).count() >= refresh_Time) {
-			//if (refresh_Timer.read_ms() >= refresh_Time) {
-					//refresh_Timer.reset();
+			
 			mutex.lock();
 			hour = myGPS.hour;
 			minute = myGPS.minute;
@@ -112,11 +107,7 @@ void readGps(void) {
 			satellites = myGPS.satellites;
 			mutex.unlock();
 			gpsInfoAvailable = true;
-					
-					
-					//}
-			//}
-			}
+		}
 }
 
 void normalMode() {
