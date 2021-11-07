@@ -108,6 +108,7 @@ void normalMode() {
 				printf("Angle: %5.2f\r\n", angle);
 				printf("Altitude: %5.2f\r\n", altitude);
 				printf("Satellites: %d\r\n", satellites);
+				gpsInfoAvailable = false;
 			}
 			tick_event = false;
 		
@@ -134,15 +135,17 @@ void testMode(){
 			printf("SOIL MOISTURE: %2.2f%% \n ", soilMoistureSensor.getMoistureValue());
 			printf("\n\n");
 			if (gpsInfoAvailable){
-			printf("Time: %d:%d:%d.%u\r\n", hour, minute, seconds_gps, milliseconds_gps);
-			printf("Date: %d/%d/20%d\r\n", day, month, year);
-			printf("Quality: %d\r\n", (int) fixquality);
-			//if ((int)myGPS.fixquality > 0) {
-			printf("Location: %5.2f %c, %5.2f %c\r\n", latitude, lat, longitude, lon);
-			printf("Speed: %5.2f knots\r\n",speed);
-			printf("Angle: %5.2f\r\n", angle);
-			printf("Altitude: %5.2f\r\n", altitude);
-			printf("Satellites: %d\r\n", satellites);
+				printf("Time: %d:%d:%d.%u\r\n", hour, minute, seconds_gps, milliseconds_gps);
+				printf("Date: %d/%d/20%d\r\n", day, month, year);
+				printf("Quality: %d\r\n", (int) fixquality);
+				//if ((int)myGPS.fixquality > 0) {
+				printf("Location: %5.2f %c, %5.2f %c\r\n", latitude, lat, longitude, lon);
+				printf("Speed: %5.2f knots\r\n",speed);
+				printf("Angle: %5.2f\r\n", angle);
+				printf("Altitude: %5.2f\r\n", altitude);
+				printf("Satellites: %d\r\n", satellites);
+				gpsInfoAvailable = false;
+			
 			}
 			tick_event = false;
 		}
