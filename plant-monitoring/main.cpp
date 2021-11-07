@@ -35,6 +35,13 @@ uint16_t rgbValues[4];
 InterruptIn userButton(PB_2);
 Thread gps_thread;
 bool gpsInfoAvailable;
+uint8_t hour, minute, seconds_gps, year, month, day;
+uint16_t milliseconds_gps;
+float latitude, longitude, geoidheight, altitude;
+float speed, angle;
+char lat, lon, mag;
+bool fix;
+uint8_t fixquality, satellites;
 
 void buttonPressedIsr() {
 	buttonPressed = true;
@@ -62,6 +69,22 @@ void readAndPrintGps(void) {
 			if (duration_cast<milliseconds>(refresh_Timer.elapsed_time()).count() >= refresh_Time) {
 			//if (refresh_Timer.read_ms() >= refresh_Time) {
 					refresh_Timer.reset();
+					hour = myGPS.hour;
+					minute = myGPS.minute;
+					seconds_gps = myGPS.seconds;
+					milliseconds_gps = myGPS.milliseconds;
+					day = myGPS.day;
+					month = myGPS.month;
+					year = myGPS.year;
+					fixquality = myGPS.fixquality;
+					lat = myGPS.lat;
+					lon = myGPS.lon;
+					latitude = myGPS.latitude;
+					longitude = myGPS.longitude;
+					speed = myGPS.speed;
+					angle = myGPS.angle;
+					altitude = myGPS.altitude;
+					satellites = myGPS.satellites;
 					gpsInfoAvailable = true;
 					
 					//}
@@ -71,24 +94,27 @@ void readAndPrintGps(void) {
 
 void normalMode() {
 	printf("Norrrmal\n");
+	ticker.attach(ticker_isr, 4000ms);
 	while (!buttonPressed){
 		gps_thread.start(readAndPrintGps);
-		if (gpsInfoAvailable){
-			printf("Time: %d:%d:%d.%u\r\n", myGPS.hour, myGPS.minute, myGPS.seconds, myGPS.milliseconds);
-			printf("Date: %d/%d/20%d\r\n", myGPS.day, myGPS.month, myGPS.year);
-			printf("Quality: %d\r\n", (int) myGPS.fixquality);
-			//if ((int)myGPS.fixquality > 0) {
-			printf("Location: %5.2f %c, %5.2f %c\r\n", myGPS.latitude, myGPS.lat, myGPS.longitude, myGPS.lon);
-			printf("Speed: %5.2f knots\r\n", myGPS.speed);
-			printf("Angle: %5.2f\r\n", myGPS.angle);
-			printf("Altitude: %5.2f\r\n", myGPS.altitude);
-			printf("Satellites: %d\r\n", myGPS.satellites);
-		}
+		if(tick_event){
+			if (gpsInfoAvailable){
+				printf("Time: %d:%d:%d.%u\r\n", hour, minute, seconds_gps, milliseconds_gps);
+				printf("Date: %d/%d/20%d\r\n",day, month, year);
+				printf("Quality: %d\r\n", (int) fixquality);
+				//if ((int)myGPS.fixquality > 0) {
+				printf("Location: %5.2f %c, %5.2f %c\r\n", latitude, lat, longitude, lon);
+				printf("Speed: %5.2f knots\r\n", speed);
+				printf("Angle: %5.2f\r\n", angle);
+				printf("Altitude: %5.2f\r\n", altitude);
+				printf("Satellites: %d\r\n", satellites);
+			}
+			tick_event = false;
 		
-	};
+	}
 }
-
-void testMode() {
+}
+void testMode(){
 	printf("Testing\n");
 	ticker.attach(ticker_isr, 2000ms);
 	
@@ -108,20 +134,21 @@ void testMode() {
 			printf("SOIL MOISTURE: %2.2f%% \n ", soilMoistureSensor.getMoistureValue());
 			printf("\n\n");
 			if (gpsInfoAvailable){
-			printf("Time: %d:%d:%d.%u\r\n", myGPS.hour, myGPS.minute, myGPS.seconds, myGPS.milliseconds);
-			printf("Date: %d/%d/20%d\r\n", myGPS.day, myGPS.month, myGPS.year);
-			printf("Quality: %d\r\n", (int) myGPS.fixquality);
+			printf("Time: %d:%d:%d.%u\r\n", hour, minute, seconds_gps, milliseconds_gps);
+			printf("Date: %d/%d/20%d\r\n", day, month, year);
+			printf("Quality: %d\r\n", (int) fixquality);
 			//if ((int)myGPS.fixquality > 0) {
-			printf("Location: %5.2f %c, %5.2f %c\r\n", myGPS.latitude, myGPS.lat, myGPS.longitude, myGPS.lon);
-			printf("Speed: %5.2f knots\r\n", myGPS.speed);
-			printf("Angle: %5.2f\r\n", myGPS.angle);
-			printf("Altitude: %5.2f\r\n", myGPS.altitude);
-			printf("Satellites: %d\r\n", myGPS.satellites);
+			printf("Location: %5.2f %c, %5.2f %c\r\n", latitude, lat, longitude, lon);
+			printf("Speed: %5.2f knots\r\n",speed);
+			printf("Angle: %5.2f\r\n", angle);
+			printf("Altitude: %5.2f\r\n", altitude);
+			printf("Satellites: %d\r\n", satellites);
 			}
 			tick_event = false;
 		}
 	}
-	printf("Exiting thread\n");
+	
+
 }
 
 
