@@ -32,23 +32,63 @@ bool buttonPressed = false;
 float accValues[3];
 uint16_t rgbValues[4];
 InterruptIn userButton(PB_2);
+Thread gps_thread;
 
 void buttonPressedIsr() {
 	buttonPressed = true;
 }
 
+void readAndPrintGps(void) {
+	gps_Serial = new UnbufferedSerial(PA_9, PA_10,9600); //serial object for use w/ GPS
+	Adafruit_GPS myGPS(gps_Serial); //object of Adafruit's GPS class
+	char c; //when read via Adafruit_GPS::read(), the class returns single character stored here
+	Timer refresh_Timer; //sets up a timer for use in loop; how often do we print GPS info?
+	const int refresh_Time = 2000; //refresh time in ms
+	while(true) {
+			refresh_Timer.start(); 
+			c = myGPS.read();   //queries the GPS
+			//if (c) { printf("%c", c); } //this line will echo the GPS data if not paused
+
+			//check if we recieved a new message from GPS, if so, attempt to parse it,
+			if ( myGPS.newNMEAreceived() ) {
+				if ( !myGPS.parse(myGPS.lastNMEA()) ) {
+					continue;
+				}
+			}
+
+			//check if enough time has passed to warrant printing GPS info to screen
+			//note if refresh_Time is too low or pc.baud is too low, GPS data may be lost during printing
+			if (duration_cast<milliseconds>(refresh_Timer.elapsed_time()).count() >= refresh_Time) {
+			//if (refresh_Timer.read_ms() >= refresh_Time) {
+					refresh_Timer.reset();
+					printf("Time: %d:%d:%d.%u\r\n", myGPS.hour, myGPS.minute, myGPS.seconds, myGPS.milliseconds);
+					printf("Date: %d/%d/20%d\r\n", myGPS.day, myGPS.month, myGPS.year);
+					printf("Quality: %d\r\n", (int) myGPS.fixquality);
+					//if ((int)myGPS.fixquality > 0) {
+					printf("Location: %5.2f %c, %5.2f %c\r\n", myGPS.latitude, myGPS.lat, myGPS.longitude, myGPS.lon);
+					printf("Speed: %5.2f knots\r\n", myGPS.speed);
+					printf("Angle: %5.2f\r\n", myGPS.angle);
+					printf("Altitude: %5.2f\r\n", myGPS.altitude);
+					printf("Satellites: %d\r\n", myGPS.satellites);
+					//}
+			}
+			}
+}
+
 void normalMode() {
 	printf("Norrrmal\n");
 	while (!buttonPressed){
-		wait_us(500);
+		gps_thread.start(readAndPrintGps);
+		//wait_us(500);
 	};
 }
 
 void testMode() {
-	printf("Tesssting\n");
+	printf("Testing\n");
 	ticker.attach(ticker_isr, 2000ms);
 	
 	while(!buttonPressed) {
+		gps_thread.start(readAndPrintGps);
 		if(tick_event){
 			acc.getAllAxis(accValues);
 			humtempsensor.measure();
@@ -68,18 +108,12 @@ void testMode() {
 	printf("Exiting thread\n");
 }
 
+
 int main(void){
 	rgbSensor.enablePowerAndRGBC();
 
 	//GPS
-	gps_Serial = new UnbufferedSerial(PA_9, PA_10,9600); //serial object for use w/ GPS
-	Adafruit_GPS myGPS(gps_Serial); //object of Adafruit's GPS class
-	char c; //when read via Adafruit_GPS::read(), the class returns single character stored here
-	Timer refresh_Timer; //sets up a timer for use in loop; how often do we print GPS info?
-	const int refresh_Time = 2000; //refresh time in ms
 
-  refresh_Timer.start();  //starts the clock on the timer
-	
 	userButton.fall(buttonPressedIsr);
 	currentMode = TEST;
 	testMode();
@@ -106,34 +140,3 @@ int main(void){
 	}		
 }	
 
-//void readAndPrintGps() {
-//	
-//	while(true) {
-//				c = myGPS.read();   //queries the GPS
-////        if (c) { printf("%c", c); } //this line will echo the GPS data if not paused
-
-//        //check if we recieved a new message from GPS, if so, attempt to parse it,
-//		if ( myGPS.newNMEAreceived() ) {
-//				if ( !myGPS.parse(myGPS.lastNMEA()) ) {
-//						continue;
-//				}
-//		}
-
-//		//check if enough time has passed to warrant printing GPS info to screen
-//		//note if refresh_Time is too low or pc.baud is too low, GPS data may be lost during printing
-//		if (duration_cast<milliseconds>(refresh_Timer.elapsed_time()).count() >= refresh_Time) {
-//		//if (refresh_Timer.read_ms() >= refresh_Time) {
-//				refresh_Timer.reset();
-//				printf("Time: %d:%d:%d.%u\r\n", myGPS.hour, myGPS.minute, myGPS.seconds, myGPS.milliseconds);
-//				printf("Date: %d/%d/20%d\r\n", myGPS.day, myGPS.month, myGPS.year);
-//				printf("Quality: %d\r\n", (int) myGPS.fixquality);
-//				if ((int)myGPS.fixquality > 0) {
-//					printf("Location: %5.2f %c, %5.2f %c\r\n", myGPS.latitude, myGPS.lat, myGPS.longitude, myGPS.lon);
-//					printf("Speed: %5.2f knots\r\n", myGPS.speed);
-//					printf("Angle: %5.2f\r\n", myGPS.angle);
-//					printf("Altitude: %5.2f\r\n", myGPS.altitude);
-//					printf("Satellites: %d\r\n", myGPS.satellites);
-//				}
-//		}
-//	}
-//}
