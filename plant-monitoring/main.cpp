@@ -33,8 +33,8 @@ bool buttonPressed = false;
 float accValues[3];
 uint16_t rgbValues[4];
 InterruptIn userButton(PB_2);
-Thread gps_thread;
-bool gpsInfoAvailable;
+Thread gps_thread(osPriorityNormal,2048);;
+bool gpsInfoAvailable = false;
 uint8_t hour, minute, seconds_gps, year, month, day;
 uint16_t milliseconds_gps;
 float latitude, longitude, geoidheight, altitude;
@@ -47,15 +47,15 @@ void buttonPressedIsr() {
 	buttonPressed = true;
 }
 
-void readAndPrintGps(void) {
+void readGps(void) {
 
 	char c; //when read via Adafruit_GPS::read(), the class returns single character stored here
-	Timer refresh_Timer; //sets up a timer for use in loop; how often do we print GPS info?
-	const int refresh_Time = 2000; //refresh time in ms
+	//Timer refresh_Timer; //sets up a timer for use in loop; how often do we print GPS info?
+	//const int refresh_Time = 2000; //refresh time in ms
 	while(true) {
-			refresh_Timer.start(); 
+			//refresh_Timer.start(); 
 			c = myGPS.read();   //queries the GPS
-			//if (c) { printf("%c", c); } //this line will echo the GPS data if not paused
+			if (c) { printf("%c", c); } //this line will echo the GPS data if not paused
 
 			//check if we recieved a new message from GPS, if so, attempt to parse it,
 			if ( myGPS.newNMEAreceived() ) {
@@ -66,9 +66,9 @@ void readAndPrintGps(void) {
 
 			//check if enough time has passed to warrant printing GPS info to screen
 			//note if refresh_Time is too low or pc.baud is too low, GPS data may be lost during printing
-			if (duration_cast<milliseconds>(refresh_Timer.elapsed_time()).count() >= refresh_Time) {
+			//if (duration_cast<milliseconds>(refresh_Timer.elapsed_time()).count() >= refresh_Time) {
 			//if (refresh_Timer.read_ms() >= refresh_Time) {
-					refresh_Timer.reset();
+					//refresh_Timer.reset();
 					hour = myGPS.hour;
 					minute = myGPS.minute;
 					seconds_gps = myGPS.seconds;
@@ -88,15 +88,14 @@ void readAndPrintGps(void) {
 					gpsInfoAvailable = true;
 					
 					//}
-			}
+			//}
 			}
 }
 
 void normalMode() {
 	printf("Norrrmal\n");
-	ticker.attach(ticker_isr, 4000ms);
+	ticker.attach(ticker_isr, 5000ms);
 	while (!buttonPressed){
-		gps_thread.start(readAndPrintGps);
 		if(tick_event){
 			if (gpsInfoAvailable){
 				printf("Time: %d:%d:%d.%u\r\n", hour, minute, seconds_gps, milliseconds_gps);
@@ -118,9 +117,7 @@ void normalMode() {
 void testMode(){
 	printf("Testing\n");
 	ticker.attach(ticker_isr, 2000ms);
-	
 	while(!buttonPressed) {
-		gps_thread.start(readAndPrintGps);
 		if(tick_event){
 			acc.getAllAxis(accValues);
 			humtempsensor.measure();
@@ -159,7 +156,7 @@ int main(void){
 	rgbSensor.enablePowerAndRGBC();
 
 	//GPS
-
+	gps_thread.start(readGps);
 	userButton.fall(buttonPressedIsr);
 	currentMode = TEST;
 	testMode();
