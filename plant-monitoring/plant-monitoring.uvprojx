@@ -11320,6 +11320,16 @@
             </File>
           </Files>
         </Group>
+        <Group>
+          <GroupName>New Group</GroupName>
+          <Files>
+            <File>
+              <FileName>GSPinfo.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\GSPinfo.h</FilePath>
+            </File>
+          </Files>
+        </Group>
       </Groups>
     </Target>
   </Targets>
