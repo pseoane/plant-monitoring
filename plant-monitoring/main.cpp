@@ -12,18 +12,41 @@
 #include "./MBed_Adafruit_GPS.h"
 #include "./SEN_13322.h"
 
+#define TEMP_LIMIT_MIN  0
+#define TEMP_LIMIT_MAX	45
+
+#define HUM_LIMIT_MIN   10
+#define HUM_LIMIT_MAX		95
+
+#define SOILM_LIMIT_MIN 10
+#define SOILM_LIMIT_MAX 90
+
+#define LIGHT_LIMIT_MIN 2
+#define LIGHT_LIMIT_MAX 95
+
+#define GREEN_LIMIT_MIN 1 //450
+#define STAND_LIMIT			30
+
+#define CLEAR_MIN_LIMIT 1 //if below, clear led = ON
+
+#define NORMAL_MODE_CADENCE 2500ms //Seconds of normal mode cadence monitoring without scaling
+
+#define N_MEASURES 			10   //Number of measures made in NORMAL_MODE after which mean,min,max values are displayed without scaling
+
+#define SCALE_FACTOR    12  // With this factor we can scale to fullfill th requirements (avg,min,.max,... each 1h) 
+
+
 enum Mode { TEST, NORMAL };
 
 Mode currentMode = TEST;
 MMA8451Q acc(PB_9,PB_8,0x1d<<1);
 TCS3472_I2C rgbSensor(PB_9, PB_8);
 HW5P1_2015 lightSensor(A0);
-RGBLED rgbLed(PH_0, PH_1, PB_13);
+RGBLED rgbLed(PH_0, PB_13, PH_1);
 Si7021 humtempsensor(PB_9,PB_8);
 SEN_13322 soilMoistureSensor(PA_0);
 UnbufferedSerial* gps_Serial = new UnbufferedSerial(PA_9, PA_10,9600); //serial object for use w/ GPS
 Adafruit_GPS myGPS(gps_Serial); //object of Adafruit's GPS class
-
 Ticker ticker;
 bool tick_event;
 void ticker_isr(void){tick_event = true;}
@@ -42,22 +65,22 @@ float speed, angle;
 char lat, lon, mag;
 bool fix;
 uint8_t fixquality, satellites;
+uint8_t nmeasuresdone= 0;
 Mutex mutex;
+
 
 void buttonPressedIsr() {
 	buttonPressed = true;
 }
 
 void readGps(void) {
-
 	char c; //when read via Adafruit_GPS::read(), the class returns single character stored here
 	//Timer refresh_Timer; //sets up a timer for use in loop; how often do we print GPS info?
 	//const int refresh_Time = 2000; //refresh time in ms
 	while(true) {
 			//refresh_Timer.start(); 
 			c = myGPS.read();   //queries the GPS
-			if (c) { printf("%c", c); } //this line will echo the GPS data if not paused
-
+			//if (c) { printf("%c", c); } //this line will echo the GPS data if not paused
 			//check if we recieved a new message from GPS, if so, attempt to parse it,
 			if ( myGPS.newNMEAreceived() ) {
 				if ( !myGPS.parse(myGPS.lastNMEA()) ) {
@@ -70,25 +93,25 @@ void readGps(void) {
 			//if (duration_cast<milliseconds>(refresh_Timer.elapsed_time()).count() >= refresh_Time) {
 			//if (refresh_Timer.read_ms() >= refresh_Time) {
 					//refresh_Timer.reset();
-			    mutex.lock();
-					hour = myGPS.hour;
-					minute = myGPS.minute;
-					seconds_gps = myGPS.seconds;
-					milliseconds_gps = myGPS.milliseconds;
-					day = myGPS.day;
-					month = myGPS.month;
-					year = myGPS.year;
-					fixquality = myGPS.fixquality;
-					lat = myGPS.lat;
-					lon = myGPS.lon;
-					latitude = myGPS.latitude;
-					longitude = myGPS.longitude;
-					speed = myGPS.speed;
-					angle = myGPS.angle;
-					altitude = myGPS.altitude;
-					satellites = myGPS.satellites;
-					mutex.unlock();
-					gpsInfoAvailable = true;
+			mutex.lock();
+			hour = myGPS.hour;
+			minute = myGPS.minute;
+			seconds_gps = myGPS.seconds;
+			milliseconds_gps = myGPS.milliseconds;
+			day = myGPS.day;
+			month = myGPS.month;
+			year = myGPS.year;
+			fixquality = myGPS.fixquality;
+			lat = myGPS.lat;
+			lon = myGPS.lon;
+			latitude = myGPS.latitude;
+			longitude = myGPS.longitude;
+			speed = myGPS.speed;
+			angle = myGPS.angle;
+			altitude = myGPS.altitude;
+			satellites = myGPS.satellites;
+			mutex.unlock();
+			gpsInfoAvailable = true;
 					
 					
 					//}
@@ -98,9 +121,19 @@ void readGps(void) {
 
 void normalMode() {
 	printf("Norrrmal\n");
-	ticker.attach(ticker_isr, 5000ms);
+	ticker.attach(ticker_isr, NORMAL_MODE_CADENCE );
 	while (!buttonPressed){
 		if(tick_event){
+			nmeasuresdone ++;
+			if(nmeasuresdone == N_MEASURES){
+				//print media,min,max,...
+				nmeasuresdone = 0;
+			}
+			
+			
+			
+			
+			
 			if (gpsInfoAvailable){
 				mutex.lock();
 				printf("Time: %d:%d:%d.%u\r\n", hour, minute, seconds_gps, milliseconds_gps);
@@ -116,9 +149,9 @@ void normalMode() {
 				gpsInfoAvailable = false;
 			}
 			tick_event = false;
-		
+	
+		}
 	}
-}
 }
 void testMode(){
 	printf("Testing\n");
@@ -167,7 +200,6 @@ int main(void){
 	currentMode = TEST;
 	testMode();
 	while(true){
-
 		if (buttonPressed) {
 			switch (currentMode) {
 				case(TEST):
@@ -186,6 +218,7 @@ int main(void){
 			
 		}
 		
-	}		
+	}
 }	
+
 
