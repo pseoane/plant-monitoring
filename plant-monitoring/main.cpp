@@ -21,26 +21,27 @@ HW5P1_2015 lightSensor(A0);
 RGBLED rgbLed(PH_0, PH_1, PB_13);
 Si7021 humtempsensor(PB_9,PB_8);
 SEN_13322 soilMoistureSensor(PA_0);
+UnbufferedSerial* gps_Serial = new UnbufferedSerial(PA_9, PA_10,9600); //serial object for use w/ GPS
+Adafruit_GPS myGPS(gps_Serial); //object of Adafruit's GPS class
 
 Ticker ticker;
 bool tick_event;
 void ticker_isr(void){tick_event = true;}
 char const* colorNames[3] = {"RED", "GREEN", "BLUE"};
 using namespace std::chrono;
-UnbufferedSerial * gps_Serial;
 bool buttonPressed = false;
 float accValues[3];
 uint16_t rgbValues[4];
 InterruptIn userButton(PB_2);
 Thread gps_thread;
+bool gpsInfoAvailable;
 
 void buttonPressedIsr() {
 	buttonPressed = true;
 }
 
 void readAndPrintGps(void) {
-	gps_Serial = new UnbufferedSerial(PA_9, PA_10,9600); //serial object for use w/ GPS
-	Adafruit_GPS myGPS(gps_Serial); //object of Adafruit's GPS class
+
 	char c; //when read via Adafruit_GPS::read(), the class returns single character stored here
 	Timer refresh_Timer; //sets up a timer for use in loop; how often do we print GPS info?
 	const int refresh_Time = 2000; //refresh time in ms
@@ -61,15 +62,8 @@ void readAndPrintGps(void) {
 			if (duration_cast<milliseconds>(refresh_Timer.elapsed_time()).count() >= refresh_Time) {
 			//if (refresh_Timer.read_ms() >= refresh_Time) {
 					refresh_Timer.reset();
-					printf("Time: %d:%d:%d.%u\r\n", myGPS.hour, myGPS.minute, myGPS.seconds, myGPS.milliseconds);
-					printf("Date: %d/%d/20%d\r\n", myGPS.day, myGPS.month, myGPS.year);
-					printf("Quality: %d\r\n", (int) myGPS.fixquality);
-					//if ((int)myGPS.fixquality > 0) {
-					printf("Location: %5.2f %c, %5.2f %c\r\n", myGPS.latitude, myGPS.lat, myGPS.longitude, myGPS.lon);
-					printf("Speed: %5.2f knots\r\n", myGPS.speed);
-					printf("Angle: %5.2f\r\n", myGPS.angle);
-					printf("Altitude: %5.2f\r\n", myGPS.altitude);
-					printf("Satellites: %d\r\n", myGPS.satellites);
+					gpsInfoAvailable = true;
+					
 					//}
 			}
 			}
@@ -79,7 +73,18 @@ void normalMode() {
 	printf("Norrrmal\n");
 	while (!buttonPressed){
 		gps_thread.start(readAndPrintGps);
-		//wait_us(500);
+		if (gpsInfoAvailable){
+			printf("Time: %d:%d:%d.%u\r\n", myGPS.hour, myGPS.minute, myGPS.seconds, myGPS.milliseconds);
+			printf("Date: %d/%d/20%d\r\n", myGPS.day, myGPS.month, myGPS.year);
+			printf("Quality: %d\r\n", (int) myGPS.fixquality);
+			//if ((int)myGPS.fixquality > 0) {
+			printf("Location: %5.2f %c, %5.2f %c\r\n", myGPS.latitude, myGPS.lat, myGPS.longitude, myGPS.lon);
+			printf("Speed: %5.2f knots\r\n", myGPS.speed);
+			printf("Angle: %5.2f\r\n", myGPS.angle);
+			printf("Altitude: %5.2f\r\n", myGPS.altitude);
+			printf("Satellites: %d\r\n", myGPS.satellites);
+		}
+		
 	};
 }
 
@@ -102,6 +107,17 @@ void testMode() {
 			printf("HUMIDITY: %2.2f%%  \n ", humtempsensor.get_humidity());
 			printf("SOIL MOISTURE: %2.2f%% \n ", soilMoistureSensor.getMoistureValue());
 			printf("\n\n");
+			if (gpsInfoAvailable){
+			printf("Time: %d:%d:%d.%u\r\n", myGPS.hour, myGPS.minute, myGPS.seconds, myGPS.milliseconds);
+			printf("Date: %d/%d/20%d\r\n", myGPS.day, myGPS.month, myGPS.year);
+			printf("Quality: %d\r\n", (int) myGPS.fixquality);
+			//if ((int)myGPS.fixquality > 0) {
+			printf("Location: %5.2f %c, %5.2f %c\r\n", myGPS.latitude, myGPS.lat, myGPS.longitude, myGPS.lon);
+			printf("Speed: %5.2f knots\r\n", myGPS.speed);
+			printf("Angle: %5.2f\r\n", myGPS.angle);
+			printf("Altitude: %5.2f\r\n", myGPS.altitude);
+			printf("Satellites: %d\r\n", myGPS.satellites);
+			}
 			tick_event = false;
 		}
 	}
