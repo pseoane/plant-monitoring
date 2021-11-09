@@ -7,6 +7,7 @@ MetricsManager::MetricsManager() {
 	numMeasures = 0;
 }
 
+
 MetricsManager::~MetricsManager() {};
 
 void MetricsManager::addValue(float value) {

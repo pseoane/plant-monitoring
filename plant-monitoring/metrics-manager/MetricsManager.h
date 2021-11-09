@@ -8,6 +8,7 @@ class MetricsManager {
 		* Constructor
 		*/
 		MetricsManager();
+		
 	
 		/** 
 		* Destructor
@@ -24,7 +25,7 @@ class MetricsManager {
 		* Removes all metrics information
 		*/
 		void reset();
-	
+		
 		/**
 		* @returns the average of all values added
 		*/

@@ -12,29 +12,30 @@
 #include "./MBed_Adafruit_GPS.h"
 #include "./SEN_13322.h"
 
+// Magnitude : Degrees
 #define TEMP_LIMIT_MIN  0
 #define TEMP_LIMIT_MAX	45
 #define TEMP_ALERT_COLOR "RED"
-
+// Maginutude : %
 #define HUM_LIMIT_MIN   10
 #define HUM_LIMIT_MAX		95
 #define HUM_ALERT_COLOR "GREEN"
-
+// Magnitude : %
 #define SOILM_LIMIT_MIN 10
 #define SOILM_LIMIT_MAX 90
 #define SOILM_ALERT_COLOR "BLUE"
-
+// Magnitude : %
 #define LIGHT_LIMIT_MIN 2
 #define LIGHT_LIMIT_MAX 95
 #define LIGHT_ALERT_COLOR "REDGREEN"
-
-#define GREEN_LIMIT_MIN 1 //450
+// Magnitude : 
+#define GREEN_LIMIT_MIN 450
 #define NOT_GREEN_ALERT_COLOR "REDBLUE"
-
-#define STAND_LIMIT			30
+// Magnitude : g
+#define STAND_LIMIT			-0.5
 #define NOT_STAND_ALERT_COLOR "REDGREENBLUE"
 
-
+// Magnitude :
 #define CLEAR_MIN_LIMIT 1 //if below, clear led = ON
 
 #define NORMAL_MODE_CADENCE 3000ms
@@ -60,7 +61,8 @@ SEN_13322 soilMoistureSensor(PA_0);
 UnbufferedSerial* gps_Serial = new UnbufferedSerial(PA_9, PA_10,9600); //serial object for use w/ GPS
 Adafruit_GPS myGPS(gps_Serial); //object of Adafruit's GPS class
 InterruptIn userButton(PB_2);
-Thread gps_thread(osPriorityNormal,2048);;
+Thread gps_thread(osPriorityNormal,2048);
+DigitalOut clear_led(PB_7);
 
 uint8_t hour, minute, seconds_gps, year, month, day;
 uint16_t milliseconds_gps;
@@ -172,6 +174,16 @@ void printMetrics() {
 	printf("MAX %3.1f\n", soilMoistureSensor.metricsManager.computeMax());
 	printf("MIN %3.1f\n", soilMoistureSensor.metricsManager.computeMin());	
 	
+	printf("METRICS FOR ACCELEROMETER IN THE LAST HOUR\n");
+	printf("X : MAX %3.1f\n", acc.xAxMetricsManager.computeMax());
+	printf("X : MIN %3.1f\n", acc.xAxMetricsManager.computeMin());
+	
+	printf("Y : MAX %3.1f\n", acc.yAxMetricsManager.computeMax());
+	printf("Y : MIN %3.1f\n", acc.yAxMetricsManager.computeMin());
+	
+	printf("Z : MAX %3.1f\n", acc.zAxMetricsManager.computeMax());
+	printf("Z : MIN %3.1f\n", acc.zAxMetricsManager.computeMin());
+	
 	printf("\n\n");
 	// Do this for all the other sensors
 }
@@ -208,6 +220,26 @@ void normalMode() {
 			}
 			
 			// Check alerts here
+			
+			if (rgbValues[0] < CLEAR_MIN_LIMIT){ clear_led = 1;} 
+			else{clear_led = 0;}
+			
+			//If the measures are out of range the corresponding RGB color is set
+			if(accValues[2] > STAND_LIMIT ){	//Under this value the plant has fallen 			
+				rgbLed.setColor(1, 1, 1);
+			}else if(temp < TEMP_LIMIT_MIN  || temp > TEMP_LIMIT_MAX ){
+				rgbLed.setColor(1, 0, 0);
+			}else if (humidity < HUM_LIMIT_MIN  || humidity > HUM_LIMIT_MAX ){
+			  rgbLed.setColor(0, 0, 1);
+			}else if (light < LIGHT_LIMIT_MIN  || light > LIGHT_LIMIT_MAX ){
+				rgbLed.setColor(0, 0, 1);
+			}else if (soilMoisture < SOILM_LIMIT_MIN  || soilMoisture > SOILM_LIMIT_MAX ){
+				rgbLed.setColor(0, 0, 1);
+			}else if (rgbValues[2] < GREEN_LIMIT_MIN){
+				rgbLed.setColor(0, 0, 1);
+			}else{ //No error
+				rgbLed.setColor(0, 0, 0);
+			}		
 			
 			tick_event = false;
 		}
