@@ -56,7 +56,7 @@ Mode currentMode;
 
 MMA8451Q acc(PB_9,PB_8,0x1d<<1);
 TCS3472_I2C rgbSensor(PB_9, PB_8);
-HW5P1_2015 lightSensor(A0);
+HW5P1_2015 lightSensor(PA_4);
 RGBLED rgbLed(PH_0, PB_13, PH_1);
 Si7021 humtempsensor(PB_9,PB_8);
 SEN_13322 soilMoistureSensor(PA_0);
@@ -74,7 +74,6 @@ float speed, angle;
 char lat, lon, mag;
 char const* colorNames[3] = {"RED", "GREEN", "BLUE"};
 bool tick_event;
-bool gpsInfoAvailable = false;
 bool buttonPressed = false;
 bool shouldComputeMetrics = false;
 
@@ -122,32 +121,29 @@ void readGps() {
 			altitude = myGPS.altitude;
 			satellites = myGPS.satellites;
 			mutex.unlock();
-			gpsInfoAvailable = true;
 		}
+}
+
+void printGpsInfo() {
+	mutex.lock();
+	printf("TIME: %d:%d:%d.%u", hour, minute, seconds_gps, milliseconds_gps);
+	printf(" DATE: %d/%d/20%d",day, month, year);
+	printf(" LOCATION: %5.2f %c, %5.2f %c", latitude, lat, longitude, lon);
+	printf(" SPEED: %5.2f knots", speed);
+	printf(" ALTITUDE: %5.2fz", altitude);
+	printf(" SATELLITES: %d", satellites);
+	printf("\n\n");
+	mutex.unlock();
 }
 
 void printValues(float acc[], uint16_t rgb[], char const* dominantColorName, float light, float humidity, float temp, float soilMoisture) {
 	printf("ACCELEROMETER: X_AXIS=%f \t Y_AXIS=%f\t Z_AXIS=%f\n", acc[0], acc[1], acc[2]);
 	printf("COLOR SENSOR: CLEAR=%d, RED=%d, GREEN=%d, BLUE=%d -- DOMINANT COLOR=%s\n", rgb[0], rgb[1], rgb[2], rgb[3], dominantColorName);
-	printf("LIGHT: %3.1f%%", light);
+	printf("LIGHT: %3.1f%% \n", light);
 	printf("TEMPERATURE: %2.2f C \n", temp);
 	printf("HUMIDITY: %2.2f%%  \n", humidity);
 	printf("SOIL MOISTURE: %2.2f%% \n", soilMoisture);
-	printf("\n\n");
-}
-
-void printGpsInfo() {
-	mutex.lock();
-	printf("Time: %d:%d:%d.%u\r\n", hour, minute, seconds_gps, milliseconds_gps);
-	printf("Date: %d/%d/20%d\r\n",day, month, year);
-	printf("Quality: %d\r\n", (int) fixquality);
-	printf("Location: %5.2f %c, %5.2f %c\r\n", latitude, lat, longitude, lon);
-	printf("Speed: %5.2f knots\r\n", speed);
-	printf("Angle: %5.2f\r\n", angle);
-	printf("Altitude: %5.2f\r\n", altitude);
-	printf("Satellites: %d\r\n", satellites);
-	mutex.unlock();
-	gpsInfoAvailable = false;
+	printGpsInfo();
 }
 
 void computeMetricsTickerIsr() {
@@ -230,10 +226,6 @@ void normalMode() {
 			float light  = lightSensor.readLight();
 			printValues(accValues, rgbValues, dominantColorName, light, humidity, temp, soilMoisture);
 			
-			if (gpsInfoAvailable){
-				printGpsInfo();
-			}
-			
 			if (shouldComputeMetrics) {
 				printMetrics();
 				// Also update a global variable for the predominant color
@@ -262,10 +254,7 @@ void testMode() {
 			float soilMoisture = soilMoistureSensor.getMoistureValue();
 			float light  = lightSensor.readLight();
 			rgbLed.setColor(dominantColor);
-				printValues(accValues, rgbValues, dominantColorName, light, humidity, temp, soilMoisture);
-			if (gpsInfoAvailable){
-				printGpsInfo();
-			}
+			printValues(accValues, rgbValues, dominantColorName, light, humidity, temp, soilMoisture);
 			tick_event = false;
 		}
 	}
