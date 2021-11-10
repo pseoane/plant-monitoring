@@ -189,6 +189,27 @@ void printMetrics() {
 	printf("\n\n");
 	// Do this for all the other sensors
 }
+void checkAlerts(float acc[], uint16_t rgb[], char const* dominantColorName, float light, float humidity, float temp, float soilMoisture){
+	if (rgb[0] < CLEAR_MIN_LIMIT){
+			clear_led = 1;
+	} else{clear_led = 0;}
+	//If the measures are out of range the corresponding RGB color is set
+	if(acc[2] > STAND_LIMIT ){	//Under this value the plant has fallen 			
+		rgbLed.setColor(NOT_STAND_ALERT_COLOR);
+	}else if(temp < TEMP_LIMIT_MIN  || temp > TEMP_LIMIT_MAX ){
+		rgbLed.setColor(TEMP_ALERT_COLOR);
+	}else if (humidity < HUM_LIMIT_MIN  || humidity > HUM_LIMIT_MAX ){
+		rgbLed.setColor(HUM_ALERT_COLOR);
+	}else if (light < LIGHT_LIMIT_MIN  || light > LIGHT_LIMIT_MAX ){
+		rgbLed.setColor(LIGHT_ALERT_COLOR);
+	}else if (soilMoisture < SOILM_LIMIT_MIN  || soilMoisture > SOILM_LIMIT_MAX ){
+		rgbLed.setColor(SOILM_ALERT_COLOR);
+	}else if (rgb[2] < GREEN_LIMIT_MIN){
+		rgbLed.setColor(NOT_GREEN_ALERT_COLOR);
+	}else{ //No alerts
+		rgbLed.setColor(TURN_OFF_RGBLED);
+	}
+	}
 
 void normalMode() {
 	ticker.attach(ticker_isr, NORMAL_MODE_CADENCE);
@@ -220,29 +241,8 @@ void normalMode() {
 				lightSensor.metricsManager.reset();
 				shouldComputeMetrics = false;
 			}
-			
 			// Check alerts here
-			
-			if (rgbValues[0] < CLEAR_MIN_LIMIT){
-				clear_led = 1;
-			} else{clear_led = 0;}
-			//If the measures are out of range the corresponding RGB color is set
-			if(accValues[2] > STAND_LIMIT ){	//Under this value the plant has fallen 			
-				rgbLed.setColor(NOT_STAND_ALERT_COLOR);
-			}else if(temp < TEMP_LIMIT_MIN  || temp > TEMP_LIMIT_MAX ){
-				rgbLed.setColor(TEMP_ALERT_COLOR);
-			}else if (humidity < HUM_LIMIT_MIN  || humidity > HUM_LIMIT_MAX ){
-			  rgbLed.setColor(HUM_ALERT_COLOR);
-			}else if (light < LIGHT_LIMIT_MIN  || light > LIGHT_LIMIT_MAX ){
-				rgbLed.setColor(LIGHT_ALERT_COLOR);
-			}else if (soilMoisture < SOILM_LIMIT_MIN  || soilMoisture > SOILM_LIMIT_MAX ){
-				rgbLed.setColor(SOILM_ALERT_COLOR);
-			}else if (rgbValues[2] < GREEN_LIMIT_MIN){
-				rgbLed.setColor(NOT_GREEN_ALERT_COLOR);
-			}else{ //No alerts
-				rgbLed.setColor(TURN_OFF_RGBLED);
-			}		
-			
+			checkAlerts(accValues, rgbValues, dominantColorName, light, humidity, temp, soilMoisture);
 			tick_event = false;
 		}
 	}
