@@ -10,7 +10,28 @@ void RGBLED::setColor(uint8_t red, uint8_t green, uint8_t blue) {
 }
 
 void RGBLED::setColor(int color) {
-	redPin = color == RED;
-	bluePin = color == BLUE;
-	greenPin = color == GREEN;
+	switch(color){
+		case 0: 
+			setColor(1,0,0);
+      break;
+		case 1: 
+			setColor(0,1,0);
+      break;
+		case 2: 
+			setColor(0,0,1);
+      break;
+		case 3: 
+			setColor(1,1,0);
+      break;
+		case 4: 
+			setColor(1,0,1);
+      break;
+		case 5: 
+			setColor(1,1,1);
+      break;
+		case 6:
+			setColor(0,0,0);
+	default : break;
+}
+
 }
