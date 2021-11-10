@@ -60,7 +60,7 @@ HW5P1_2015 lightSensor(A0);
 RGBLED rgbLed(PH_0, PB_13, PH_1);
 Si7021 humtempsensor(PB_9,PB_8);
 SEN_13322 soilMoistureSensor(PA_0);
-UnbufferedSerial* gps_Serial = new UnbufferedSerial(PA_9, PA_10,9600); //serial object for use w/ GPS
+BufferedSerial* gps_Serial = new BufferedSerial(PA_9, PA_10,9600); //serial object for use w/ GPS
 Adafruit_GPS myGPS(gps_Serial); //object of Adafruit's GPS class
 InterruptIn userButton(PB_2);
 Thread gps_thread(osPriorityNormal,2048);
@@ -141,7 +141,6 @@ void printGpsInfo() {
 	printf("Time: %d:%d:%d.%u\r\n", hour, minute, seconds_gps, milliseconds_gps);
 	printf("Date: %d/%d/20%d\r\n",day, month, year);
 	printf("Quality: %d\r\n", (int) fixquality);
-	//if ((int)myGPS.fixquality > 0) {
 	printf("Location: %5.2f %c, %5.2f %c\r\n", latitude, lat, longitude, lon);
 	printf("Speed: %5.2f knots\r\n", speed);
 	printf("Angle: %5.2f\r\n", angle);
@@ -232,7 +231,7 @@ void normalMode() {
 			printValues(accValues, rgbValues, dominantColorName, light, humidity, temp, soilMoisture);
 			
 			if (gpsInfoAvailable){
-				// printGpsInfo();
+				printGpsInfo();
 			}
 			
 			if (shouldComputeMetrics) {
@@ -263,9 +262,9 @@ void testMode() {
 			float soilMoisture = soilMoistureSensor.getMoistureValue();
 			float light  = lightSensor.readLight();
 			rgbLed.setColor(dominantColor);
-			printValues(accValues, rgbValues, dominantColorName, light, humidity, temp, soilMoisture);
+				printValues(accValues, rgbValues, dominantColorName, light, humidity, temp, soilMoisture);
 			if (gpsInfoAvailable){
-				//printGpsInfo();
+				printGpsInfo();
 			}
 			tick_event = false;
 		}
@@ -292,7 +291,7 @@ int main(void) {
 					break;
 				case(NORMAL):
 					currentMode = TEST;
-					printf("Current mode set to TEST\n");
+			    printf("Current mode set to TEST\n");
 					buttonPressed = false;
 					testMode();
 					break;

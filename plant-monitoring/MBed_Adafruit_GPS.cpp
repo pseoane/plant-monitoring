@@ -192,7 +192,7 @@ char Adafruit_GPS::read(void) {
   return c;
 }
 
-Adafruit_GPS::Adafruit_GPS (UnbufferedSerial *ser)
+Adafruit_GPS::Adafruit_GPS (BufferedSerial *ser)
 {
   common_init();     // Set everything to common state, then...
   gpsSerial = ser; // ...override gpsSwSerial with value passed.
@@ -218,7 +218,7 @@ void Adafruit_GPS::common_init(void) {
 
 void Adafruit_GPS::begin(int baud)
 {
-  gpsSerial->baud(baud);
+  //gpsSerial->baud(baud);
   thread_sleep_for(10);
 }
 
