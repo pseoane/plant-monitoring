@@ -6,13 +6,25 @@
 #define REG_OUT_X_MSB     0x01
 #define REG_OUT_Y_MSB     0x03
 #define REG_OUT_Z_MSB     0x05
- 
+#define REG_INTERRUPT_CFG 0X2E //Bit 2 = Free fall, Bit 3 = Tap
+#define REG_PULSE_CFG     0X21
+#define REG_PULSE_SRC			0x22
+#define REG_PULSE_THRESHOLD_Z 0x25
+
 #define UINT14_MAX        16383
  
 MMA8451Q::MMA8451Q(PinName sda, PinName scl, int addr) : m_i2c(sda, scl), m_addr(addr) {
     // activate the peripheral
     uint8_t data[2] = {REG_CTRL_REG_1, 0x01};
+		uint8_t interruptCfgData[2] = {REG_INTERRUPT_CFG, 0x08};
+		uint8_t tapCfgData[2] = {REG_PULSE_CFG, 0x10};
+		uint8_t tapTHZ[2] = {REG_PULSE_THRESHOLD_Z, 0x20};
+		
     writeRegs(data, 2);
+		writeRegs(interruptCfgData, 2);  // Redirect tap detection interruption to I1 pin
+		writeRegs(tapCfgData, 2); // Enable single tap detection 
+		writeRegs(tapTHZ, 2);
+		
 		xAxMetricsManager = MetricsManager();
 		yAxMetricsManager = MetricsManager();
 		zAxMetricsManager = MetricsManager();
