@@ -6,24 +6,48 @@
 #define REG_OUT_X_MSB     0x01
 #define REG_OUT_Y_MSB     0x03
 #define REG_OUT_Z_MSB     0x05
-#define REG_INTERRUPT_CFG 0X2E //Bit 2 = Free fall, Bit 3 = Tap
-#define REG_PULSE_CFG     0X21
+#define REG_INTERRUPT_CFG 0x2E //Bit 2 = Free fall, Bit 3 = Tap
+#define REG_PULSE_CFG     0x21
 #define REG_PULSE_SRC			0x22
+#define CTRL_REG4 0x2D
 #define REG_PULSE_THRESHOLD_Z 0x25
+#define PULSE_TMLT  0x26
+#define PULSE_LTCY  0x27
 
 #define UINT14_MAX        16383
  
 MMA8451Q::MMA8451Q(PinName sda, PinName scl, int addr) : m_i2c(sda, scl), m_addr(addr) {
-    // activate the peripheral
-    uint8_t data[2] = {REG_CTRL_REG_1, 0x01};
-		uint8_t interruptCfgData[2] = {REG_INTERRUPT_CFG, 0x08};
+    
+		//Stand by mode for write registers
+
+		uint8_t standbyactive[2] = {REG_CTRL_REG_1,0x08};
+		writeRegs(standbyactive, 1);
+		//enable single pulse in z 
 		uint8_t tapCfgData[2] = {REG_PULSE_CFG, 0x10};
-		uint8_t tapTHZ[2] = {REG_PULSE_THRESHOLD_Z, 0x20};
-		
-    writeRegs(data, 2);
-		writeRegs(interruptCfgData, 2);  // Redirect tap detection interruption to I1 pin
-		writeRegs(tapCfgData, 2); // Enable single tap detection 
+		writeRegs(tapCfgData, 2);
+		// set threshold
+		uint8_t tapTHZ[2] = {REG_PULSE_THRESHOLD_Z, 0x02};
 		writeRegs(tapTHZ, 2);
+		// set limit tap detection
+		uint8_t window[2] = {PULSE_TMLT, 0x30};
+		writeRegs(window, 2);
+		//Set latency
+		uint8_t latency[2] = {PULSE_LTCY, 0xF0};
+		writeRegs(latency, 2);
+		//Route INT1 to system interrupt
+		uint8_t pulseEnableInt[2] = {CTRL_REG4, 0x08};
+		writeRegs(pulseEnableInt, 2);
+		uint8_t interruptCfgData[2] = {REG_INTERRUPT_CFG, 0x08};
+		writeRegs(interruptCfgData, 2);
+		
+		// Set acc to active mode
+		uint8_t c = 0;
+		readRegs(REG_CTRL_REG_1, &c, 1);
+		uint8_t active = c | 0x01;
+		uint8_t setActivemode[2] = {REG_CTRL_REG_1, active};
+		writeRegs(setActivemode, 2); 
+		
+		
 		
 		xAxMetricsManager = MetricsManager();
 		yAxMetricsManager = MetricsManager();
