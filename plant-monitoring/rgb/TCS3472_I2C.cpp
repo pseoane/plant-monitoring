@@ -54,7 +54,7 @@ int TCS3472_I2C::getPredominantColor(uint16_t* readings) {
 	return tempMaxIndex - 1; // Clear is not included
 }
  
-int TCS3472_I2C::getAllColors(uint16_t* readings ){
+int TCS3472_I2C::getAllColors(uint16_t* readings){
     char buffer[8] = { 0 };
  
     readMultipleRegisters( CDATA, buffer, 8 );

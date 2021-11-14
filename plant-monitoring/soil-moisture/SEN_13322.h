@@ -1,6 +1,7 @@
 #ifndef SEN_13322_H
 #define SEN_13322_H
 #include "mbed.h"
+#include "./MetricsManager.h"
 
 class SEN_13322 {
 	public:
@@ -20,6 +21,8 @@ class SEN_13322 {
 		* @returns current humidity value from 0.0 to 100.0
 		*/
 		float getMoistureValue();
+	
+		MetricsManager metricsManager;
 			
 };
 

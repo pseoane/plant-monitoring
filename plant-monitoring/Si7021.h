@@ -2,6 +2,7 @@
 #define SI7021_H
  
 #include "mbed.h"
+#include "./MetricsManager.h"
  
 /** Si7012 Read Temperature Command */
 #define READ_TEMP        0xE0 /* Read previous T data from RH measurement command*/
@@ -58,6 +59,9 @@ public:
      * return: 0 if successful, else one of the defined error codes.
      */
     bool check();
+		
+		MetricsManager tempMetricsManager;
+		MetricsManager humMetricsManager;
     
 private:
     I2C i2c;

@@ -20,6 +20,7 @@
 #define MMA8451Q_H
  
 #include "mbed.h"
+#include "./MetricsManager.h"
  
 /**
 * MMA8451Q accelerometer example
@@ -73,6 +74,11 @@ public:
 	* @param returnValue array of 3 elements corresponding to axis X, Y and Z
 	*/
 	void getAllAxis(float * returnValue);
+	
+	MetricsManager xAxMetricsManager;
+	MetricsManager yAxMetricsManager;
+	MetricsManager zAxMetricsManager;
+	
   
  
 private:

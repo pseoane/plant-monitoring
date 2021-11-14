@@ -1,4 +1,5 @@
 #include "MMA8451Q.h"
+#include "./MetricsManager.h"
  
 #define REG_WHO_AM_I      0x0D
 #define REG_CTRL_REG_1    0x2A
@@ -12,6 +13,9 @@ MMA8451Q::MMA8451Q(PinName sda, PinName scl, int addr) : m_i2c(sda, scl), m_addr
     // activate the peripheral
     uint8_t data[2] = {REG_CTRL_REG_1, 0x01};
     writeRegs(data, 2);
+		xAxMetricsManager = MetricsManager();
+		yAxMetricsManager = MetricsManager();
+		zAxMetricsManager = MetricsManager();
 }
  
 MMA8451Q::~MMA8451Q() { }
@@ -33,9 +37,13 @@ void MMA8451Q::getAllAxis(float * returnValue) {
 	uint8_t res[6];
 	
 	readRegs(REG_OUT_X_MSB, res, 6);
-	returnValue[0] = float(concatValues(res[0], res[1])) / 4096.0;
-	returnValue[1] = float(concatValues(res[2], res[3])) / 4096.0;
-	returnValue[2] = float(concatValues(res[4], res[5])) / 4069.0;
+	returnValue[0] = (-1)*float(concatValues(res[0], res[1])) / 4096.0;
+	xAxMetricsManager.addValue(returnValue[0]);
+	returnValue[1] = (-1)*float(concatValues(res[2], res[3])) / 4096.0;
+	yAxMetricsManager.addValue(returnValue[1]);
+	returnValue[2] = (-1)*float(concatValues(res[4], res[5])) / 4069.0;
+	zAxMetricsManager.addValue(returnValue[2]);
+	
 }
  
 void MMA8451Q::readRegs(int addr, uint8_t * data, int len) {

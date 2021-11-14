@@ -1,6 +1,7 @@
 #ifndef HW5P1_2015_H
 #define HW5P1_2015_H
 #include "mbed.h"
+#include "./MetricsManager.h"
 
 class HW5P1_2015 {
 	
@@ -22,6 +23,8 @@ class HW5P1_2015 {
 	  * Current light value from 0.0 to 100.0
 	  */
 		float readLight();
+
+		MetricsManager metricsManager;
 };
 
 #endif

@@ -31,6 +31,7 @@ class RGBLED {
 		void setColor(uint8_t red, uint8_t green, uint8_t blue);
 		
 		void setColor(int color);
+		
 };
 
 #endif

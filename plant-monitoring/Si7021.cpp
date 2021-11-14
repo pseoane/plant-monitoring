@@ -1,8 +1,11 @@
 #include "Si7021.h"
+#include "./MetricsManager.h"
  
 Si7021::Si7021(PinName sda, PinName scl):i2c(sda, scl)
 {
     i2c.frequency(FREQ);
+		tempMetricsManager = MetricsManager();
+		humMetricsManager = MetricsManager();
 }
  
 Si7021::~Si7021()
@@ -12,12 +15,16 @@ Si7021::~Si7021()
  
 float Si7021::get_temperature()
 {
-     return float(tData / 1000 + (tData % 1000)*0.001);
+	float temp = float(tData / 1000 + (tData % 1000)*0.001);
+	tempMetricsManager.addValue(temp);
+	return temp;
 }
  
 float Si7021::get_humidity()
 {
-    return float(rhData / 1000 + (rhData % 1000)*0.001);
+	float hum = float(rhData / 1000 + (rhData % 1000)*0.001);
+	humMetricsManager.addValue(hum);
+	return hum;
 }
  
 bool Si7021::measure()
