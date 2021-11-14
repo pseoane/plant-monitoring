@@ -64,6 +64,7 @@ BufferedSerial* gps_Serial = new BufferedSerial(PA_9, PA_10,9600); //serial obje
 Adafruit_GPS myGPS(gps_Serial); //object of Adafruit's GPS class
 InterruptIn userButton(PB_2);
 InterruptIn accelerometerInt(PB_12);
+InterruptIn accelerometerFreefallInt(PB_14);
 Thread gps_thread(osPriorityNormal,2048);
 DigitalOut clear_led(PB_7);
 
@@ -77,6 +78,7 @@ char const* colorNames[3] = {"RED", "GREEN", "BLUE"};
 bool tick_event;
 bool buttonPressed = false;
 bool accInterrupted = false;
+bool accFreeFallInterrupted = false;
 bool shouldComputeMetrics = false;
 
 Mutex mutex;
@@ -93,6 +95,11 @@ void buttonPressedIsr() {
 void accIsr() {
 	accInterrupted = true;
 }
+
+void accFreeFallIsr() {
+	accFreeFallInterrupted = true;
+}
+	
 void readGps() {
 	char c; //when read via Adafruit_GPS::read(), the class returns single character stored here
 	//Timer refresh_Timer; //sets up a timer for use in loop; how often do we print GPS info?
@@ -196,20 +203,20 @@ void checkAlerts(float acc[], uint16_t rgb[], char const* dominantColorName, flo
 	//If the measures are out of range the corresponding RGB color is set
 	if(acc[2] > STAND_LIMIT ){	//Under this value the plant has fallen 			
 		rgbLed.setColor(NOT_STAND_ALERT_COLOR);
-	}else if(temp < TEMP_LIMIT_MIN  || temp > TEMP_LIMIT_MAX ){
+	} else if(temp < TEMP_LIMIT_MIN  || temp > TEMP_LIMIT_MAX ){
 		rgbLed.setColor(TEMP_ALERT_COLOR);
-	}else if (humidity < HUM_LIMIT_MIN  || humidity > HUM_LIMIT_MAX ){
+	} else if (humidity < HUM_LIMIT_MIN  || humidity > HUM_LIMIT_MAX ){
 		rgbLed.setColor(HUM_ALERT_COLOR);
-	}else if (light < LIGHT_LIMIT_MIN  || light > LIGHT_LIMIT_MAX ){
+	} else if (light < LIGHT_LIMIT_MIN  || light > LIGHT_LIMIT_MAX ){
 		rgbLed.setColor(LIGHT_ALERT_COLOR);
-	}else if (soilMoisture < SOILM_LIMIT_MIN  || soilMoisture > SOILM_LIMIT_MAX ){
+	} else if (soilMoisture < SOILM_LIMIT_MIN  || soilMoisture > SOILM_LIMIT_MAX ){
 		rgbLed.setColor(SOILM_ALERT_COLOR);
-	}else if (rgb[2] < GREEN_LIMIT_MIN){
+	} else if (rgb[2] < GREEN_LIMIT_MIN){
 		rgbLed.setColor(NOT_GREEN_ALERT_COLOR);
-	}else{ //No alerts
+	} else { //No alerts
 		rgbLed.setColor(TURN_OFF_RGBLED);
 	}
-	}
+}
 
 void normalMode() {
 	ticker.attach(ticker_isr, NORMAL_MODE_CADENCE);
@@ -264,6 +271,10 @@ void testMode() {
 				printf("TAP DETECTED\n");
 				accInterrupted = false;
 			}
+			if (accFreeFallInterrupted) {
+				printf("FREEFALL DETECTED\n");
+				accFreeFallInterrupted = false;
+			}
 			tick_event = false;
 		}
 	}
@@ -273,6 +284,7 @@ void testMode() {
 int main(void) {
 	rgbSensor.enablePowerAndRGBC();
 	accelerometerInt.rise(accIsr);
+	accelerometerFreefallInt.rise(accFreeFallIsr);
 	//GPS
 	gps_thread.start(readGps);
 	userButton.fall(buttonPressedIsr);
