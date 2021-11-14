@@ -36,18 +36,20 @@ MMA8451Q::MMA8451Q(PinName sda, PinName scl, int addr) : m_i2c(sda, scl), m_addr
 		// Set latency
 		uint8_t latency[2] = {PULSE_LTCY, 0xF0};
 		writeRegs(latency, 2);
-		// Route INT1 to system interrupt
-		uint8_t pulseEnableInt[2] = {CTRL_REG4, 0x08};
+		
+		// Enable tap and free fall interruptions
+		uint8_t pulseEnableInt[2] = {CTRL_REG4, 0x0C};
 		writeRegs(pulseEnableInt, 2);
+		// Route INT1 to system interrupt
 		uint8_t interruptCfgData[2] = {REG_INTERRUPT_CFG, 0x08};
 		writeRegs(interruptCfgData, 2);
 		
 		// Enable freefall detection on X, Y, Z
-		uint8_t freeFallEnableData[2] = {REG_FF_MT_CFG, 0x1D};
+		uint8_t freeFallEnableData[2] = {REG_FF_MT_CFG, 0x1C};
 		writeRegs(freeFallEnableData, 2);
 		
 		// Set freefall threshold
-		uint8_t freeFallThresholdData[2] = {REG_FF_MT_THS, 0x14};
+		uint8_t freeFallThresholdData[2] = {REG_FF_MT_THS, 0xB5};
 		writeRegs(freeFallThresholdData, 2);
 		
 		// Set acc to active mode
@@ -88,7 +90,6 @@ void MMA8451Q::getAllAxis(float * returnValue) {
 	yAxMetricsManager.addValue(returnValue[1]);
 	returnValue[2] = (-1)*float(concatValues(res[4], res[5])) / 4069.0;
 	zAxMetricsManager.addValue(returnValue[2]);
-	
 }
  
 void MMA8451Q::readRegs(int addr, uint8_t * data, int len) {

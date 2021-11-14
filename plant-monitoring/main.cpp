@@ -254,7 +254,7 @@ void normalMode() {
 void testMode() {
 	ticker.attach(ticker_isr, TEST_MODE_CADENCE);
 	while(!buttonPressed) {
-		if(tick_event){
+		if(true){
 			float accValues[3];
 			uint16_t rgbValues[4];
 			acc.getAllAxis(accValues);
