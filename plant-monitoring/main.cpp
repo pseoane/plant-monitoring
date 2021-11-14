@@ -40,9 +40,9 @@
 // Magnitude :
 #define CLEAR_MIN_LIMIT 1 //if below, clear led = ON
 
-#define NORMAL_MODE_CADENCE 3000ms
+#define NORMAL_MODE_CADENCE 30000ms
 #define TEST_MODE_CADENCE 2000ms
-#define COMPUTE_METRICS_CADENCE 15000ms //1 hour in miliseconds
+#define COMPUTE_METRICS_CADENCE 3600000ms //1 hour in miliseconds
 
 #define N_MEASURES 			10   //Number of measures made in NORMAL_MODE after which mean,min,max values are displayed without scaling
 
@@ -248,13 +248,21 @@ void normalMode() {
 			checkAlerts(accValues, rgbValues, dominantColorName, light, humidity, temp, soilMoisture);
 			tick_event = false;
 		}
+		if (accInterrupted){
+				printf("TAP DETECTED\n");
+				accInterrupted = false;
+		}
+		if (accFreeFallInterrupted) {
+				printf("FREEFALL DETECTED\n");
+				accFreeFallInterrupted = false;
+		}
 	}
 }
 
 void testMode() {
 	ticker.attach(ticker_isr, TEST_MODE_CADENCE);
 	while(!buttonPressed) {
-		if(true){
+		if(tick_event){
 			float accValues[3];
 			uint16_t rgbValues[4];
 			acc.getAllAxis(accValues);
@@ -267,15 +275,15 @@ void testMode() {
 			float light  = lightSensor.readLight();
 			rgbLed.setColor(dominantColor);
 			printValues(accValues, rgbValues, dominantColorName, light, humidity, temp, soilMoisture);
-			if (accInterrupted){
+			tick_event = false;
+		}
+		if (accInterrupted){
 				printf("TAP DETECTED\n");
 				accInterrupted = false;
-			}
-			if (accFreeFallInterrupted) {
+		}
+		if (accFreeFallInterrupted) {
 				printf("FREEFALL DETECTED\n");
 				accFreeFallInterrupted = false;
-			}
-			tick_event = false;
 		}
 	}
 }
