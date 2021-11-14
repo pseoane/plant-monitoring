@@ -63,6 +63,7 @@ SEN_13322 soilMoistureSensor(PA_0);
 BufferedSerial* gps_Serial = new BufferedSerial(PA_9, PA_10,9600); //serial object for use w/ GPS
 Adafruit_GPS myGPS(gps_Serial); //object of Adafruit's GPS class
 InterruptIn userButton(PB_2);
+InterruptIn accelerometerInt(PB_12);
 Thread gps_thread(osPriorityNormal,2048);
 DigitalOut clear_led(PB_7);
 
@@ -75,6 +76,7 @@ char lat, lon, mag;
 char const* colorNames[3] = {"RED", "GREEN", "BLUE"};
 bool tick_event;
 bool buttonPressed = false;
+bool accInterrupted = false;
 bool shouldComputeMetrics = false;
 
 Mutex mutex;
@@ -88,6 +90,9 @@ void buttonPressedIsr() {
 	buttonPressed = true;
 }
 
+void accIsr() {
+	accInterrupted = true;
+}
 void readGps() {
 	char c; //when read via Adafruit_GPS::read(), the class returns single character stored here
 	//Timer refresh_Timer; //sets up a timer for use in loop; how often do we print GPS info?
@@ -255,6 +260,10 @@ void testMode() {
 			float light  = lightSensor.readLight();
 			rgbLed.setColor(dominantColor);
 			printValues(accValues, rgbValues, dominantColorName, light, humidity, temp, soilMoisture);
+			if (accInterrupted){
+				printf("TAP DETECTED\n");
+				accInterrupted = false;
+			}
 			tick_event = false;
 		}
 	}
@@ -263,7 +272,7 @@ void testMode() {
 
 int main(void) {
 	rgbSensor.enablePowerAndRGBC();
-
+	accelerometerInt.rise(accIsr);
 	//GPS
 	gps_thread.start(readGps);
 	userButton.fall(buttonPressedIsr);
