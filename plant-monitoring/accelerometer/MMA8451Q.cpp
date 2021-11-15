@@ -53,7 +53,7 @@ MMA8451Q::MMA8451Q(PinName sda, PinName scl, int addr) : m_i2c(sda, scl), m_addr
 		writeRegs(freeFallEnableData, 2);
 		
 		// Set freefall threshold
-		uint8_t freeFallThresholdData[2] = {REG_FF_MT_THS, 0xB5};
+		uint8_t freeFallThresholdData[2] = {REG_FF_MT_THS, 0xBF};
 		writeRegs(freeFallThresholdData, 2);
 		
 		// Set acc to active mode
