@@ -26231,7 +26231,7 @@
 
   <Group>
     <GroupName>accelerometer</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -26263,7 +26263,7 @@
 
   <Group>
     <GroupName>light</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -26334,24 +26334,24 @@
     <File>
       <GroupNumber>7</GroupNumber>
       <FileNumber>2174</FileNumber>
-      <FileType>5</FileType>
+      <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\Si7021.h</PathWithFileName>
-      <FilenameWithoutPath>Si7021.h</FilenameWithoutPath>
+      <PathWithFileName>.\temp-hum\Si7021.cpp</PathWithFileName>
+      <FilenameWithoutPath>Si7021.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
     <File>
       <GroupNumber>7</GroupNumber>
       <FileNumber>2175</FileNumber>
-      <FileType>8</FileType>
+      <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\Si7021.cpp</PathWithFileName>
-      <FilenameWithoutPath>Si7021.cpp</FilenameWithoutPath>
+      <PathWithFileName>.\temp-hum\Si7021.h</PathWithFileName>
+      <FilenameWithoutPath>Si7021.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -26370,7 +26370,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\MBed_Adafruit_GPS.cpp</PathWithFileName>
+      <PathWithFileName>.\gps\MBed_Adafruit_GPS.cpp</PathWithFileName>
       <FilenameWithoutPath>MBed_Adafruit_GPS.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -26382,7 +26382,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\MBed_Adafruit_GPS.h</PathWithFileName>
+      <PathWithFileName>.\gps\MBed_Adafruit_GPS.h</PathWithFileName>
       <FilenameWithoutPath>MBed_Adafruit_GPS.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>

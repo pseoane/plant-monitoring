@@ -102,7 +102,7 @@ void accFreeFallIsr() {
 	accFreeFallInterrupted = true;
 }
 
-void doubleTapIsr(){
+void doubleTapIsr() {
 	accDoubleInterrupted = true;
 }
 
@@ -116,7 +116,7 @@ void readGps() {
 			//if (c) { printf("%c", c); } //this line will echo the GPS data if not paused
 			//check if we recieved a new message from GPS, if so, attempt to parse it,
 			if ( myGPS.newNMEAreceived() ) {
-				if ( !myGPS.parse(myGPS.lastNMEA()) ) {
+				if (!myGPS.parse(myGPS.lastNMEA())) {
 					continue;
 				}
 			}
@@ -203,24 +203,27 @@ void printMetrics() {
 	// Do this for all the other sensors
 }
 void checkAlerts(float acc[], uint16_t rgb[], char const* dominantColorName, float light, float humidity, float temp, float soilMoisture){
-	if (rgb[0] < CLEAR_MIN_LIMIT){
+	if (rgb[0] < CLEAR_MIN_LIMIT) {
 			clear_led = 1;
-	} else{clear_led = 0;}
+	} else {
+		clear_led = 0;
+	}
+	
 	//If the measures are out of range the corresponding RGB color is set
 	if(acc[2] > STAND_LIMIT ){	//Under this value the plant has fallen 			
 		rgbLed.setColor(NOT_STAND_ALERT_COLOR);
-	} else if(temp < TEMP_LIMIT_MIN  || temp > TEMP_LIMIT_MAX ){
-		rgbLed.setColor(TEMP_ALERT_COLOR);
-	} else if (humidity < HUM_LIMIT_MIN  || humidity > HUM_LIMIT_MAX ){
-		rgbLed.setColor(HUM_ALERT_COLOR);
-	} else if (light < LIGHT_LIMIT_MIN  || light > LIGHT_LIMIT_MAX ){
-		rgbLed.setColor(LIGHT_ALERT_COLOR);
-	} else if (soilMoisture < SOILM_LIMIT_MIN  || soilMoisture > SOILM_LIMIT_MAX ){
-		rgbLed.setColor(SOILM_ALERT_COLOR);
-	} else if (rgb[2] < GREEN_LIMIT_MIN){
-		rgbLed.setColor(NOT_GREEN_ALERT_COLOR);
+	} else if(temp < TEMP_LIMIT_MIN  || temp > TEMP_LIMIT_MAX ) {
+			rgbLed.setColor(TEMP_ALERT_COLOR);
+	} else if (humidity < HUM_LIMIT_MIN  || humidity > HUM_LIMIT_MAX ) {
+			rgbLed.setColor(HUM_ALERT_COLOR);
+	} else if (light < LIGHT_LIMIT_MIN  || light > LIGHT_LIMIT_MAX ) {
+			rgbLed.setColor(LIGHT_ALERT_COLOR);
+	} else if (soilMoisture < SOILM_LIMIT_MIN  || soilMoisture > SOILM_LIMIT_MAX ) {
+			rgbLed.setColor(SOILM_ALERT_COLOR);
+	} else if (rgb[2] < GREEN_LIMIT_MIN) {
+			rgbLed.setColor(NOT_GREEN_ALERT_COLOR);
 	} else { //No alerts
-		rgbLed.setColor(TURN_OFF_RGBLED);
+			rgbLed.setColor(TURN_OFF_RGBLED);
 	}
 }
 
@@ -230,8 +233,8 @@ void normalMode() {
 	measuresTicker.attach(computeMetricsTickerIsr, COMPUTE_METRICS_CADENCE);
 	clear_led = 0;
 	rgbLed.setColor(TURN_OFF_RGBLED);
-	while (!buttonPressed){
-		if(tick_event){			
+	while (!buttonPressed) {
+		if(tick_event) {			
 			float accValues[3];
 			uint16_t rgbValues[4];
 			acc.getAllAxis(accValues);
@@ -254,10 +257,10 @@ void normalMode() {
 			checkAlerts(accValues, rgbValues, dominantColorName, light, humidity, temp, soilMoisture);
 			tick_event = false;
 		}
-		if (accInterrupted){
+		if (accInterrupted) {
 				uint8_t c = 0;
 				acc.readRegs(0x22, &c, 1);
-			  if ( (c&0x08)==0x08){
+			  if ((c&0x08)==0x08) {
 					printf("DOUBLE TAP DETECTED\n");
 				}else{
 					printf("TAP DETECTED\n");
