@@ -80,9 +80,11 @@ bool buttonPressed = false;
 bool accInterrupted = false;
 bool accFreeFallInterrupted = false;
 bool shouldComputeMetrics = false;
+bool accDoubleInterrupted = false;
 
 Mutex mutex;
 Ticker ticker;
+Timeout doubleTapDetections;
 
 void ticker_isr(void){
 	tick_event = true;
@@ -99,7 +101,11 @@ void accIsr() {
 void accFreeFallIsr() {
 	accFreeFallInterrupted = true;
 }
-	
+
+void doubleTapIsr(){
+	accDoubleInterrupted = true;
+}
+
 void readGps() {
 	char c; //when read via Adafruit_GPS::read(), the class returns single character stored here
 	//Timer refresh_Timer; //sets up a timer for use in loop; how often do we print GPS info?
@@ -249,7 +255,13 @@ void normalMode() {
 			tick_event = false;
 		}
 		if (accInterrupted){
-				printf("TAP DETECTED\n");
+				uint8_t c = 0;
+				acc.readRegs(0x22, &c, 1);
+			  if ( (c&0x08)==0x08){
+					printf("DOUBLE TAP DETECTED\n");
+				}else{
+					printf("TAP DETECTED\n");
+				}
 				accInterrupted = false;
 		}
 		if (accFreeFallInterrupted) {
@@ -274,12 +286,34 @@ void testMode() {
 			float soilMoisture = soilMoistureSensor.getMoistureValue();
 			float light  = lightSensor.readLight();
 			rgbLed.setColor(dominantColor);
-			printValues(accValues, rgbValues, dominantColorName, light, humidity, temp, soilMoisture);
+			//printValues(accValues, rgbValues, dominantColorName, light, humidity, temp, soilMoisture);
 			tick_event = false;
 		}
 		if (accInterrupted){
+			//Opción A  con el bit tres del registro 0x22 no funciona
+//				uint8_t c = 0;
+//				acc.readRegs(0x22, &c, 1);
+//			  if ( (c&0x08)==0x08){
+//					printf("DOUBLE TAP DETECTED\n");
+//				}else{
+//					printf("TAP DETECTED\n");
+//				}
+//				accInterrupted = false;
+			//Opción B  con el bit 3 del registro 0x0C y el timeout
+			uint8_t c = 0;
+			acc.readRegs(0x0C, &c, 1);
+			//accelerometerInt.disable_irq(); No funciona
+			doubleTapDetections.attach_us(doubleTapIsr, 800000);
+			acc.readRegs(0x0C, &c, 1);
+			printf("%x \n",c);
+			if ((c&0x08)==0x08){
+				printf("DOUBLE TAP DETECTED\n");
+			}else{
 				printf("TAP DETECTED\n");
-				accInterrupted = false;
+			}
+			accInterrupted = false;
+			//accelerometerInt.enable_irq(); No funciona
+			
 		}
 		if (accFreeFallInterrupted) {
 				printf("FREEFALL DETECTED\n");

@@ -75,6 +75,8 @@ public:
 	*/
 	void getAllAxis(float * returnValue);
 	
+	void readRegs(int addr, uint8_t * data, int len);
+	
 	MetricsManager xAxMetricsManager;
 	MetricsManager yAxMetricsManager;
 	MetricsManager zAxMetricsManager;
@@ -84,7 +86,6 @@ public:
 private:
   I2C m_i2c;
   int m_addr;
-  void readRegs(int addr, uint8_t * data, int len);
   void writeRegs(uint8_t * data, int len);
 	int16_t concatValues(int16_t reg0, int16_t reg1);
 };

@@ -24,11 +24,11 @@ MMA8451Q::MMA8451Q(PinName sda, PinName scl, int addr) : m_i2c(sda, scl), m_addr
 		//Stand by mode for write registers
 		uint8_t standbyactive[2] = {REG_CTRL_REG_1,0x08};
 		writeRegs(standbyactive, 1);
-		// enable single pulse in z 
-		uint8_t tapCfgData[2] = {REG_PULSE_CFG, 0x10};
+		// enable single and double pulse in z 
+		uint8_t tapCfgData[2] = {REG_PULSE_CFG, 0x30};
 		writeRegs(tapCfgData, 2);
 		// set threshold
-		uint8_t tapTHZ[2] = {REG_PULSE_THRESHOLD_Z, 0x02};
+		uint8_t tapTHZ[2] = {REG_PULSE_THRESHOLD_Z, 0x08};
 		writeRegs(tapTHZ, 2);
 		// set limit tap detection
 		uint8_t window[2] = {PULSE_TMLT, 0x30};
