@@ -290,20 +290,9 @@ void testMode() {
 			tick_event = false;
 		}
 		if (accInterrupted){
-			//Opción A  con el bit tres del registro 0x22 no funciona
-//				uint8_t c = 0;
-//				acc.readRegs(0x22, &c, 1);
-//			  if ( (c&0x08)==0x08){
-//					printf("DOUBLE TAP DETECTED\n");
-//				}else{
-//					printf("TAP DETECTED\n");
-//				}
-//				accInterrupted = false;
-			//Opción B  con el bit 3 del registro 0x0C y el timeout
 			uint8_t c = 0;
 			acc.readRegs(0x0C, &c, 1);
-			//accelerometerInt.disable_irq(); No funciona
-			doubleTapDetections.attach_us(doubleTapIsr, 800000);
+			wait_us(800000);
 			acc.readRegs(0x0C, &c, 1);
 			printf("%x \n",c);
 			if ((c&0x08)==0x08){
@@ -312,7 +301,6 @@ void testMode() {
 				printf("TAP DETECTED\n");
 			}
 			accInterrupted = false;
-			//accelerometerInt.enable_irq(); No funciona
 			
 		}
 		if (accFreeFallInterrupted) {
