@@ -16,25 +16,29 @@
 #define REG_FF_MT_CFG					0x15
 #define REG_FF_MT_SRC					0x16
 #define REG_FF_MT_THS 				0x17
+#define PULSE_WIND            0x28
 
 #define UINT14_MAX        16383
  
 MMA8451Q::MMA8451Q(PinName sda, PinName scl, int addr) : m_i2c(sda, scl), m_addr(addr) {
     
 		//Stand by mode for write registers
-		uint8_t standbyactive[2] = {REG_CTRL_REG_1,0x08};
+		uint8_t standbyactive[2] = {REG_CTRL_REG_1,0x10};
 		writeRegs(standbyactive, 1);
-		// enable single pulse in z 
-		uint8_t tapCfgData[2] = {REG_PULSE_CFG, 0x10};
+		// enable single and double pulse in z 
+		uint8_t tapCfgData[2] = {REG_PULSE_CFG, 0x30};
 		writeRegs(tapCfgData, 2);
 		// set threshold
-		uint8_t tapTHZ[2] = {REG_PULSE_THRESHOLD_Z, 0x02};
+		uint8_t tapTHZ[2] = {REG_PULSE_THRESHOLD_Z, 0x14};
 		writeRegs(tapTHZ, 2);
 		// set limit tap detection
-		uint8_t window[2] = {PULSE_TMLT, 0x30};
+		uint8_t window[2] = {PULSE_TMLT, 0x18};
 		writeRegs(window, 2);
 		// Set latency
-		uint8_t latency[2] = {PULSE_LTCY, 0xF0};
+		uint8_t latency[2] = {PULSE_LTCY, 0x28};
+		writeRegs(latency, 2);
+		//Time window second tap
+		uint8_t secondtap[2] = {PULSE_WIND, 0xA0}; 
 		writeRegs(latency, 2);
 		
 		// Enable tap and free fall interruptions
@@ -49,7 +53,7 @@ MMA8451Q::MMA8451Q(PinName sda, PinName scl, int addr) : m_i2c(sda, scl), m_addr
 		writeRegs(freeFallEnableData, 2);
 		
 		// Set freefall threshold
-		uint8_t freeFallThresholdData[2] = {REG_FF_MT_THS, 0xB5};
+		uint8_t freeFallThresholdData[2] = {REG_FF_MT_THS, 0xBF};
 		writeRegs(freeFallThresholdData, 2);
 		
 		// Set acc to active mode
