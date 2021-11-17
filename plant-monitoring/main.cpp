@@ -40,9 +40,9 @@
 // Magnitude :
 #define CLEAR_MIN_LIMIT 2000 //if below, clear led = ON
 
-#define NORMAL_MODE_CADENCE 30000ms
+#define NORMAL_MODE_CADENCE 1000ms
 #define TEST_MODE_CADENCE 2000ms
-#define COMPUTE_METRICS_CADENCE 3600000ms //1 hour in miliseconds
+#define COMPUTE_METRICS_CADENCE 30000ms //1 hour in miliseconds
 
 #define N_MEASURES 			10   //Number of measures made in NORMAL_MODE after which mean,min,max values are displayed without scaling
 
@@ -67,6 +67,8 @@ InterruptIn accelerometerInt(PB_12);
 InterruptIn accelerometerFreefallInt(PB_14);
 Thread gps_thread(osPriorityNormal,2048);
 DigitalOut clear_led(PB_7);
+DigitalOut led1(LED1);
+DigitalOut led2(LED2);
 
 uint8_t hour, minute, seconds_gps, year, month, day;
 uint16_t milliseconds_gps;
@@ -199,6 +201,8 @@ void printMetrics() {
 	printf("Z : MAX %3.1f\n", acc.zAxMetricsManager.computeMax());
 	printf("Z : MIN %3.1f\n", acc.zAxMetricsManager.computeMin());
 	
+	printf("DOMINANT COLOR IN THE LAST HOUR: %s\n", colorNames[rgbSensor.getPredominantColor()]);
+	
 	printf("\n\n");
 	// Do this for all the other sensors
 }
@@ -232,6 +236,8 @@ void normalMode() {
 	Ticker measuresTicker;
 	measuresTicker.attach(computeMetricsTickerIsr, COMPUTE_METRICS_CADENCE);
 	clear_led = 0;
+	led1 = 0;
+	led2 = 1;
 	rgbLed.setColor(TURN_OFF_RGBLED);
 	while (!buttonPressed) {
 		if(tick_event) {			
@@ -251,6 +257,13 @@ void normalMode() {
 				printMetrics();
 				// Also update a global variable for the predominant color
 				lightSensor.metricsManager.reset();
+				humtempsensor.humMetricsManager.reset();
+				humtempsensor.tempMetricsManager.reset();
+				soilMoistureSensor.metricsManager.reset();
+				acc.xAxMetricsManager.reset();
+				acc.yAxMetricsManager.reset();
+				acc.zAxMetricsManager.reset();
+				
 				shouldComputeMetrics = false;
 			}
 			// Check alerts here
@@ -277,6 +290,8 @@ void normalMode() {
 void testMode() {
 	ticker.attach(ticker_isr, TEST_MODE_CADENCE);
 	clear_led = 1;
+		led1 = 1;
+		led2 = 0;
 	while(!buttonPressed) {
 		if(tick_event){
 			float accValues[3];

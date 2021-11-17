@@ -5,6 +5,7 @@ MetricsManager::MetricsManager() {
 	currentMax = 0;
 	currentMin = 0;
 	numMeasures = 0;
+	firstRead = true;
 }
 
 
@@ -18,8 +19,15 @@ void MetricsManager::addValue(float value) {
 		numMeasures = 1;
 	} else {
 		currentAvg = (currentAvg * numMeasures + value) / (numMeasures + 1);
-		currentMax = value > currentMax ? value : currentMax;
-		currentMin = value < currentMin ? value : currentMin;
+		if (firstRead) {
+			currentMax = value;
+			currentMin = value;
+			firstRead = false;
+		} else {		
+			currentMax = value > currentMax ? value : currentMax;
+			currentMin = value < currentMin ? value : currentMin;
+		}
+
 		numMeasures += 1;
 	}
 }
@@ -41,4 +49,5 @@ void MetricsManager::reset() {
 	currentMax = 0;
 	currentMin = 0;
 	numMeasures = 0;
+	firstRead = true;
 }
