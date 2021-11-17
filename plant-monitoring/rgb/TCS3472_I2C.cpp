@@ -2,6 +2,9 @@
  
 TCS3472_I2C::TCS3472_I2C( PinName sda, PinName scl ) : i2c( sda, scl ){   
     i2c.frequency(100000);
+		dominantColorFrecuencies[0] = 0;
+	  dominantColorFrecuencies[1] = 0;
+		dominantColorFrecuencies[2] = 0;
 }
  
 TCS3472_I2C::~TCS3472_I2C(){
@@ -41,6 +44,20 @@ int TCS3472_I2C::readMultipleRegisters( char address, char* output, int quantity
     return ack;
 }
 
+int TCS3472_I2C::getPredominantColor() {
+	int tempMax = 0;
+	int tempMaxIndex = 0;
+	for (uint8_t i = 0; i <= 2; i++) {
+		if (dominantColorFrecuencies[i] > tempMax) {
+			tempMax = dominantColorFrecuencies[i];
+			tempMaxIndex = i;
+		}
+	}
+	dominantColorFrecuencies[0] = 0;
+	dominantColorFrecuencies[1] = 0;
+	dominantColorFrecuencies[2] = 0;
+	return tempMaxIndex;
+}
 
 int TCS3472_I2C::getPredominantColor(uint16_t* readings) {
 	uint16_t tempMax = 0;
@@ -51,6 +68,7 @@ int TCS3472_I2C::getPredominantColor(uint16_t* readings) {
 			tempMaxIndex = i;
 		}
 	}
+	dominantColorFrecuencies[tempMaxIndex - 1] += 1;
 	return tempMaxIndex - 1; // Clear is not included
 }
  

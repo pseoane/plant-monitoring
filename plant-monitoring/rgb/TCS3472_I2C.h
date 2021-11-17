@@ -288,6 +288,8 @@ public:
      *     Status register byte
      */
     char readStatusRegister();
+		
+		int getPredominantColor();
  
 private:
     I2C i2c;
@@ -298,6 +300,6 @@ private:
     int readMultipleRegisters( char address, char* output, int quantity );
     int getPredominantColor(uint16_t* readings);
     float roundTowardsZero( const float value );
+		int dominantColorFrecuencies[3];
 };
- 
 #endif

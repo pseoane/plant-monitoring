@@ -44,6 +44,7 @@ class MetricsManager {
 		float currentAvg;
 		float currentMin;
 		float currentMax;
+		bool firstRead;
 		uint16_t numMeasures;
 };
 #endif
