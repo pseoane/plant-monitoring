@@ -40,9 +40,9 @@
 // Magnitude :
 #define CLEAR_MIN_LIMIT 2000 //if below, clear led = ON
 
-#define NORMAL_MODE_CADENCE 1000ms
+#define NORMAL_MODE_CADENCE 30000ms
 #define TEST_MODE_CADENCE 2000ms
-#define COMPUTE_METRICS_CADENCE 30000ms //1 hour in miliseconds
+#define COMPUTE_METRICS_CADENCE 3600000ms //1 hour in miliseconds
 
 #define N_MEASURES 			10   //Number of measures made in NORMAL_MODE after which mean,min,max values are displayed without scaling
 
