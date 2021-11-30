@@ -1,7 +1,7 @@
 # Plant monitoring system
 Plant monitoring system for B-L072Z-LRWAN1 ARM platform
 
-# System requirements
+## System requirements
 - The system should measure:
   - Temperature
   - Soil moisture
